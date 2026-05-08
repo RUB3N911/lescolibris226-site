@@ -1,12 +1,33 @@
 export default function Hero() {
   return (
-    <section className="relative min-h-screen overflow-hidden bg-[#050505]">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(17,197,217,0.25),transparent_30%),radial-gradient(circle_at_80%_40%,rgba(255,45,143,0.22),transparent_28%),radial-gradient(circle_at_50%_80%,rgba(212,166,61,0.18),transparent_35%)]" />
+    <section className="relative min-h-screen overflow-hidden bg-black">
+      
+      {/* VIDEO BACKGROUND */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="absolute inset-0 h-full w-full object-cover"
+      >
+        <source
+          src="/videos/hero-video.mp4"
+          type="video/mp4"
+        />
+      </video>
 
-      <div className="absolute inset-0 bg-black/45" />
+      {/* OVERLAY */}
+      <div className="absolute inset-0 bg-black/60" />
 
+      {/* GLOW EFFECTS */}
+      <div className="absolute left-1/4 top-1/3 h-72 w-72 rounded-full bg-cyan-500/20 blur-3xl" />
+
+      <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-pink-500/20 blur-3xl" />
+
+      {/* CONTENT */}
       <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl items-center px-6 pt-28">
         <div className="max-w-4xl">
+
           <p className="mb-5 text-sm uppercase tracking-[0.35em] text-yellow-500">
             Association culturelle du Morne-Vert
           </p>
@@ -23,6 +44,7 @@ export default function Hero() {
           </p>
 
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+
             <button className="rounded-full bg-yellow-500 px-8 py-4 font-bold text-black transition hover:scale-105">
               Rejoindre l’aventure
             </button>
@@ -30,7 +52,15 @@ export default function Hero() {
             <button className="rounded-full border border-white/30 px-8 py-4 font-bold text-white transition hover:bg-white/10">
               Découvrir notre histoire
             </button>
+
           </div>
+        </div>
+      </div>
+
+      {/* SCROLL INDICATOR */}
+      <div className="absolute bottom-10 left-1/2 z-20 -translate-x-1/2">
+        <div className="h-12 w-7 rounded-full border border-white/30 p-1">
+          <div className="h-3 w-3 animate-bounce rounded-full bg-white" />
         </div>
       </div>
     </section>
