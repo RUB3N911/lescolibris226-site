@@ -1,7 +1,3 @@
-# lescolibris226-site
-Official immersive website for Les Colibris 226.
-
-
 # Les Colibris 226
 
 Site officiel de l’association culturelle Les Colibris du Morne-Vert.
