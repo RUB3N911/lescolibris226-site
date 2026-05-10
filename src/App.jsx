@@ -3,6 +3,7 @@ import Hero from "./sections/Hero"
 import Pillars from "./sections/Pillars"
 import StorySection from "./components/StorySection"
 import Gallery from "./sections/Gallery"
+import Join from "./sections/Join"
 
 export default function App() {
   return (
@@ -12,6 +13,7 @@ export default function App() {
       <Pillars />
       <StorySection />
       <Gallery />
+      <Join />
     </main>
   )
 }
