@@ -1,7 +1,7 @@
-import Navbar from "./sections/Navbar"
+import Navbar from "./components/Navbar"
 import Hero from "./sections/Hero"
-import StorySection from "./components/StorySection"
 import Pillars from "./sections/Pillars"
+import StorySection from "./components/StorySection"
 import Gallery from "./sections/Gallery"
 
 export default function App() {
