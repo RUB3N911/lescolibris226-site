@@ -18,6 +18,7 @@ import JoinPage from "./pages/JoinPage"
 import StoryPage from "./pages/StoryPage"
 import NotFound from "./pages/NotFound"
 import PartnersPage from "./pages/PartnersPage"
+import ScrollToTop from "./components/ScrollToTop"
 
 function AnimatedRoutes() {
   const location = useLocation()
@@ -54,6 +55,7 @@ export default function App() {
     <BrowserRouter>
       <main className="bg-black text-white">
         <Navbar />
+        <ScrollToTop />
         <AnimatedRoutes />
         <Footer />
       </main>
