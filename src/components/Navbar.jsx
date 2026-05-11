@@ -31,11 +31,11 @@ export default function Navbar() {
       <header
         className={`fixed left-0 top-0 z-50 w-full transition-all duration-500 ${
           scrolled
-            ? "border-b border-white/10 bg-black/70 backdrop-blur-xl"
-            : "bg-transparent"
+            ? "border-b border-white/10 bg-black/60 py-3 shadow-2xl backdrop-blur-2xl"
+            : "bg-transparent py-5"
         }`}
       >
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 transition-all duration-500">
 
           {/* LOGO */}
           <Link to="/" className="block">
@@ -105,7 +105,7 @@ export default function Navbar() {
             <p className="mb-4 text-sm uppercase tracking-[0.35em] text-yellow-500">
               Les Colibris 226
             </p>
-            
+
             {links.map((link) =>
               !link.to.includes("#") ? (
                 <Link
