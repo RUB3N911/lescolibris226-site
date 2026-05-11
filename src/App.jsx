@@ -7,6 +7,7 @@ import GalleryPage from "./pages/GalleryPage"
 import EventsPage from "./pages/EventsPage"
 import JoinPage from "./pages/JoinPage"
 import StoryPage from "./pages/StoryPage"
+import NotFound from "./pages/NotFound"
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
           <Route path="/events" element={<EventsPage />} />
           <Route path="/join" element={<JoinPage />} />
           <Route path="/story" element={<StoryPage />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
       </main>
