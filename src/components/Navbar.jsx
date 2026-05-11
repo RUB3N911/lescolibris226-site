@@ -22,7 +22,7 @@ export default function Navbar() {
     { label: "Histoire", to: "/#histoire" },
     { label: "Événements", to: "/events" },
     { label: "Galerie", to: "/gallery" },
-    { label: "Rejoindre", to: "/#rejoindre" },
+    { label: "Rejoindre", to: "/join" },
     { label: "Contact", to: "/contact" },
   ]
 
@@ -69,12 +69,11 @@ export default function Navbar() {
 
           {/* CTA */}
           <div className="hidden md:block">
-            <a
-              href="/#rejoindre"
+            <Link to="/join"
               className="inline-block rounded-full bg-yellow-500 px-6 py-3 text-sm font-bold text-black transition hover:scale-105"
             >
               Rejoindre
-            </a>
+            </Link>
           </div>
 
           {/* MOBILE BUTTON */}
