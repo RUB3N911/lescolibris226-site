@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react"
 import {
   BrowserRouter,
   Routes,
@@ -9,6 +10,8 @@ import { AnimatePresence, motion } from "framer-motion"
 
 import Navbar from "./components/Navbar"
 import Footer from "./sections/Footer"
+import ScrollToTop from "./components/ScrollToTop"
+import Loader from "./components/Loader"
 
 import Home from "./pages/Home"
 import Contact from "./pages/Contact"
@@ -16,9 +19,8 @@ import GalleryPage from "./pages/GalleryPage"
 import EventsPage from "./pages/EventsPage"
 import JoinPage from "./pages/JoinPage"
 import StoryPage from "./pages/StoryPage"
-import NotFound from "./pages/NotFound"
 import PartnersPage from "./pages/PartnersPage"
-import ScrollToTop from "./components/ScrollToTop"
+import NotFound from "./pages/NotFound"
 
 function AnimatedRoutes() {
   const location = useLocation()
@@ -30,10 +32,7 @@ function AnimatedRoutes() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
-        transition={{
-          duration: 0.5,
-          ease: "easeInOut",
-        }}
+        transition={{ duration: 0.5, ease: "easeInOut" }}
       >
         <Routes location={location}>
           <Route path="/" element={<Home />} />
@@ -51,9 +50,20 @@ function AnimatedRoutes() {
 }
 
 export default function App() {
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false)
+    }, 2500)
+
+    return () => clearTimeout(timer)
+  }, [])
+
   return (
     <BrowserRouter>
       <main className="bg-black text-white">
+        <Loader loading={loading} />
         <Navbar />
         <ScrollToTop />
         <AnimatedRoutes />
