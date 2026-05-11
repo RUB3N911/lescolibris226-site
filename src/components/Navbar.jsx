@@ -20,7 +20,7 @@ export default function Navbar() {
   const links = [
     { label: "Accueil", to: "/" },
     { label: "Histoire", to: "/#histoire" },
-    { label: "Événements", to: "/#evenements" },
+    { label: "Événements", to: "/events" },
     { label: "Galerie", to: "/gallery" },
     { label: "Rejoindre", to: "/#rejoindre" },
     { label: "Contact", to: "/contact" },

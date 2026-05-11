@@ -4,6 +4,7 @@ import Footer from "./sections/Footer"
 import Home from "./pages/Home"
 import Contact from "./pages/Contact"
 import GalleryPage from "./pages/GalleryPage"
+import EventsPage from "./pages/EventsPage"
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/gallery" element={<GalleryPage />} />
+          <Route path="/events" element={<EventsPage />} />
         </Routes>
         <Footer />
       </main>
