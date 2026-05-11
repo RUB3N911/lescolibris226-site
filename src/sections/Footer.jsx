@@ -38,7 +38,7 @@ export default function Footer() {
             <a href="#">Histoire</a>
             <a href="#">Événements</a>
             <a href="#">Galerie</a>
-            <a href="#">Rejoindre</a>
+            <a href="#">Partenaires</a>
           </div>
         </div>
 
