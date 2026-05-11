@@ -7,14 +7,25 @@ export default function Footer() {
       className="relative overflow-hidden bg-[#050505] px-6 py-20 text-white"
     >
       <div className="mx-auto grid max-w-7xl gap-12 md:grid-cols-3">
-        <div>
-          <h2 className="text-3xl font-black">
-            LES COLIBRIS <span className="text-yellow-500">226</span>
-          </h2>
+        <div className="flex flex-col items-start">
+          <div className="flex items-center gap-4">
+            <img
+              src="/images/logo.png"
+              alt="Logo Les Colibris 226"
+              className="h-20 w-20 object-contain"
+            />
 
-          <p className="mt-4 max-w-sm text-white/60">
-            Le battement culturel du Morne-Vert.
-          </p>
+              <div>
+                <h2 className="text-3xl font-black">
+                  LES COLIBRIS{" "}
+                  <span className="text-yellow-500">226</span>
+                </h2>
+
+                <p className="mt-2 text-white/60">
+                  Le battement culturel du Morne-Vert.
+                </p>
+            </div>
+          </div>
         </div>
 
         <div>
