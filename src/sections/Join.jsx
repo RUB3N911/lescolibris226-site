@@ -21,7 +21,7 @@ const options = [
 
 export default function Join() {
   return (
-    <section className="relative overflow-hidden bg-[#050505] px-6 py-32 text-white">
+    <section id="rejoindre" className="relative overflow-hidden bg-[#050505] px-6 py-32 text-white">
       <div className="absolute left-1/2 top-0 h-96 w-96 -translate-x-1/2 rounded-full bg-yellow-500/10 blur-3xl" />
 
       <div className="relative z-10 mx-auto max-w-7xl">

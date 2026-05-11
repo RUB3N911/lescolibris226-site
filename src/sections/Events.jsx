@@ -24,7 +24,7 @@ const events = [
 
 export default function Events() {
   return (
-    <section className="relative overflow-hidden bg-black px-6 py-32 text-white">
+    <section id="evenements" className="relative overflow-hidden bg-black px-6 py-32 text-white">
       <div className="absolute right-0 top-20 h-96 w-96 rounded-full bg-cyan-500/10 blur-3xl" />
 
       <div className="relative z-10 mx-auto max-w-7xl">

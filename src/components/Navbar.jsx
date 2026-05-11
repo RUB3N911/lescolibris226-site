@@ -17,13 +17,13 @@ export default function Navbar() {
   }, [])
 
   const links = [
-    "Accueil",
-    "Histoire",
-    "Événements",
-    "Galerie",
-    "Rejoindre",
-    "Contact",
-  ]
+  { label: "Accueil", href: "#accueil" },
+  { label: "Histoire", href: "#histoire" },
+  { label: "Événements", href: "#evenements" },
+  { label: "Galerie", href: "#galerie" },
+  { label: "Rejoindre", href: "#rejoindre" },
+  { label: "Contact", href: "#contact" },
+]
 
   return (
     <>
@@ -48,11 +48,11 @@ export default function Navbar() {
           <nav className="hidden items-center gap-10 md:flex">
             {links.map((link) => (
               <a
-                key={link}
-                href="#"
+                key={link.label}
+                href={link.href}
                 className="text-sm uppercase tracking-[0.2em] text-white/70 transition hover:text-yellow-400"
               >
-                {link}
+                {link.label}
               </a>
             ))}
           </nav>
@@ -86,12 +86,12 @@ export default function Navbar() {
           >
             {links.map((link) => (
               <a
-                key={link}
-                href="#"
+                key={link.label}
+                href={link.href}
                 onClick={() => setOpen(false)}
                 className="text-3xl font-bold text-white"
               >
-                {link}
+                {link.label}
               </a>
             ))}
           </motion.div>

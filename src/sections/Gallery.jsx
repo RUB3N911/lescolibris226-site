@@ -11,7 +11,7 @@ const photos = [
 
 export default function Gallery() {
   return (
-    <section className="relative overflow-hidden bg-black px-6 py-32 text-white">
+    <section id="galerie" className="relative overflow-hidden bg-black px-6 py-32 text-white">
       <div className="mx-auto max-w-7xl">
         <motion.div
           initial={{ opacity: 0, y: 35 }}

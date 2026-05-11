@@ -2,7 +2,7 @@ import { motion } from "framer-motion"
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen overflow-hidden bg-black">
+    <section id="accueil" className="relative min-h-screen overflow-hidden bg-black">
       {/* VIDEO BACKGROUND */}
       <video
         autoPlay

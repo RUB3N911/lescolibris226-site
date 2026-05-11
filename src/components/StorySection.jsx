@@ -2,7 +2,7 @@ import { motion } from "framer-motion"
 
 export default function StorySection() {
   return (
-    <section className="relative overflow-hidden bg-[#050505] px-6 py-32 text-white">
+    <section id="histoire" className="relative overflow-hidden bg-[#050505] px-6 py-32 text-white">
 
       {/* BACKGROUND GLOW */}
       <div className="absolute left-0 top-0 h-96 w-96 rounded-full bg-yellow-500/10 blur-3xl" />
