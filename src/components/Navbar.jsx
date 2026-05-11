@@ -96,6 +96,16 @@ export default function Navbar() {
             transition={{ duration: 0.4 }}
             className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-10 bg-black"
           >
+            <img
+              src="/images/logo.png"
+              alt="Les Colibris 226"
+              className="mb-6 h-28 w-28 object-contain"
+            />
+
+            <p className="mb-4 text-sm uppercase tracking-[0.35em] text-yellow-500">
+              Les Colibris 226
+            </p>
+            
             {links.map((link) =>
               !link.to.includes("#") ? (
                 <Link
