@@ -1,10 +1,11 @@
 import Navbar from "./components/Navbar"
 import Hero from "./sections/Hero"
 import Pillars from "./sections/Pillars"
-import StorySection from "./components/StorySection"
+import Story from "./components/StorySection"
 import Gallery from "./sections/Gallery"
-import Join from "./sections/Join"
 import Events from "./sections/Events"
+import Join from "./sections/Join"
+import Footer from "./sections/Footer"
 
 export default function App() {
   return (
@@ -12,10 +13,11 @@ export default function App() {
       <Navbar />
       <Hero />
       <Pillars />
-      <StorySection />
+      <Story />
       <Gallery />
       <Events />
       <Join />
+      <Footer />
     </main>
   )
 }
