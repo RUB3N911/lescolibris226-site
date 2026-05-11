@@ -19,7 +19,7 @@ export default function Navbar() {
 
   const links = [
     { label: "Accueil", to: "/" },
-    { label: "Histoire", to: "/#histoire" },
+    { label: "Histoire", to: "/story" },
     { label: "Événements", to: "/events" },
     { label: "Galerie", to: "/gallery" },
     { label: "Rejoindre", to: "/join" },
