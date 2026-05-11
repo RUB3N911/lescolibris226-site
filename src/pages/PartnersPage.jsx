@@ -1,5 +1,6 @@
 import { motion } from "framer-motion"
 import { Handshake, Building2, HeartHandshake } from "lucide-react"
+import { Link } from "react-router-dom"
 
 const partners = [
   {
@@ -65,6 +66,29 @@ export default function PartnersPage() {
             )
           })}
         </div>
+
+            <motion.div
+                initial={{ opacity: 0, y: 35 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.7 }}
+                className="mt-20 rounded-[2rem] border border-yellow-500/30 bg-yellow-500/10 p-10 text-center"
+                >
+                <h2 className="text-3xl font-black md:text-5xl">
+                    Vous souhaitez soutenir les Colibris ?
+                </h2>
+
+                <p className="mx-auto mt-6 max-w-2xl text-white/65">
+                    Devenez partenaire d’un projet culturel fédérateur, enraciné au Morne-Vert
+                    et porté par l’énergie du carnaval martiniquais.
+                </p>
+
+                <Link
+                    to="/contact"
+                    className="mt-8 inline-block rounded-full bg-yellow-500 px-8 py-4 font-bold text-black transition hover:scale-105"
+                >
+                    Proposer un partenariat
+                </Link>
+            </motion.div>
       </div>
     </main>
   )
