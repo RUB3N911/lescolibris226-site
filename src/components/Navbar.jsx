@@ -21,7 +21,7 @@ export default function Navbar() {
     { label: "Accueil", to: "/" },
     { label: "Histoire", to: "/#histoire" },
     { label: "Événements", to: "/#evenements" },
-    { label: "Galerie", to: "/#galerie" },
+    { label: "Galerie", to: "/gallery" },
     { label: "Rejoindre", to: "/#rejoindre" },
     { label: "Contact", to: "/contact" },
   ]
@@ -47,7 +47,7 @@ export default function Navbar() {
           {/* DESKTOP MENU */}
           <nav className="hidden items-center gap-10 md:flex">
             {links.map((link) =>
-              link.to === "/contact" ? (
+              !link.to.includes("#") ? (
                 <Link
                   key={link.label}
                   to={link.to}
@@ -98,7 +98,7 @@ export default function Navbar() {
             className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-10 bg-black"
           >
             {links.map((link) =>
-              link.to === "/contact" ? (
+              !link.to.includes("#") ? (
                 <Link
                   key={link.label}
                   to={link.to}
