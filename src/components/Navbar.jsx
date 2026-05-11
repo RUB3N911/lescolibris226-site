@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react"
 import { Menu, X } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
+  const location = useLocation()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,6 +27,18 @@ export default function Navbar() {
     { label: "Contact", to: "/contact" },
   ]
 
+  const getLinkClass = (path) =>
+    `text-sm uppercase tracking-[0.2em] transition ${
+      location.pathname === path
+        ? "text-yellow-400"
+        : "text-white/70 hover:text-yellow-400"
+    }`
+
+  const getMobileLinkClass = (path) =>
+    `text-3xl font-bold transition ${
+      location.pathname === path ? "text-yellow-400" : "text-white"
+    }`
+
   return (
     <>
       <header
@@ -36,47 +49,33 @@ export default function Navbar() {
         }`}
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 transition-all duration-500">
-
-          {/* LOGO */}
           <Link to="/" className="block">
             <h1 className="text-xl font-black tracking-widest text-white">
               LES COLIBRIS <span className="text-yellow-400">226</span>
             </h1>
           </Link>
 
-          {/* DESKTOP MENU */}
           <nav className="hidden items-center gap-10 md:flex">
-            {links.map((link) =>
-              !link.to.includes("#") ? (
-                <Link
-                  key={link.label}
-                  to={link.to}
-                  className="text-sm uppercase tracking-[0.2em] text-white/70 transition hover:text-yellow-400"
-                >
-                  {link.label}
-                </Link>
-              ) : (
-                <a
-                  key={link.label}
-                  href={link.to}
-                  className="text-sm uppercase tracking-[0.2em] text-white/70 transition hover:text-yellow-400"
-                >
-                  {link.label}
-                </a>
-              )
-            )}
+            {links.map((link) => (
+              <Link
+                key={link.label}
+                to={link.to}
+                className={getLinkClass(link.to)}
+              >
+                {link.label}
+              </Link>
+            ))}
           </nav>
 
-          {/* CTA */}
           <div className="hidden md:block">
-            <Link to="/join"
+            <Link
+              to="/join"
               className="inline-block rounded-full bg-yellow-500 px-6 py-3 text-sm font-bold text-black transition hover:scale-105"
             >
               Rejoindre
             </Link>
           </div>
 
-          {/* MOBILE BUTTON */}
           <button
             onClick={() => setOpen(!open)}
             className="text-white md:hidden"
@@ -86,7 +85,6 @@ export default function Navbar() {
         </div>
       </header>
 
-      {/* MOBILE MENU */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -106,27 +104,24 @@ export default function Navbar() {
               Les Colibris 226
             </p>
 
-            {links.map((link) =>
-              !link.to.includes("#") ? (
-                <Link
-                  key={link.label}
-                  to={link.to}
-                  onClick={() => setOpen(false)}
-                  className="text-3xl font-bold text-white"
-                >
-                  {link.label}
-                </Link>
-              ) : (
-                <a
-                  key={link.label}
-                  href={link.to}
-                  onClick={() => setOpen(false)}
-                  className="text-3xl font-bold text-white"
-                >
-                  {link.label}
-                </a>
-              )
-            )}
+            {links.map((link) => (
+              <Link
+                key={link.label}
+                to={link.to}
+                onClick={() => setOpen(false)}
+                className={getMobileLinkClass(link.to)}
+              >
+                {link.label}
+              </Link>
+            ))}
+
+            <Link
+              to="/join"
+              onClick={() => setOpen(false)}
+              className="mt-4 rounded-full bg-yellow-500 px-8 py-4 font-bold text-black"
+            >
+              Rejoindre
+            </Link>
           </motion.div>
         )}
       </AnimatePresence>
