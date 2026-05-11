@@ -3,7 +3,7 @@ import { Mail, MapPin, MessageCircle, Camera } from "lucide-react"
 export default function Footer() {
   return (
     <footer
-      id="contact"
+      
       className="relative overflow-hidden bg-[#050505] px-6 py-20 text-white"
     >
       <div className="mx-auto grid max-w-7xl gap-12 md:grid-cols-3">
