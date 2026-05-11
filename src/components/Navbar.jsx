@@ -22,7 +22,7 @@ export default function Navbar() {
     { label: "Histoire", to: "/story" },
     { label: "Événements", to: "/events" },
     { label: "Galerie", to: "/gallery" },
-    { label: "Rejoindre", to: "/join" },
+    { label: "Partenaires", to: "/partners" },
     { label: "Contact", to: "/contact" },
   ]
 
