@@ -1,4 +1,6 @@
 import { motion } from "framer-motion"
+import { useState } from "react"
+import Lightbox from "../components/Lightbox"
 
 const photos = [
   "/images/gallery/gallery-1.jpg",
@@ -10,8 +12,13 @@ const photos = [
 ]
 
 export default function Gallery() {
+  const [selectedImage, setSelectedImage] = useState(null)
+
   return (
-    <section id="galerie" className="relative overflow-hidden bg-black px-6 py-32 text-white">
+    <section
+      id="galerie"
+      className="relative overflow-hidden bg-black px-6 py-32 text-white"
+    >
       <div className="mx-auto max-w-7xl">
         <motion.div
           initial={{ opacity: 0, y: 35 }}
@@ -42,7 +49,8 @@ export default function Gallery() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.08, duration: 0.7 }}
-              className={`group relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 ${
+              onClick={() => setSelectedImage(photo)}
+              className={`group relative cursor-pointer overflow-hidden rounded-3xl border border-white/10 bg-white/5 ${
                 index === 0 || index === 3 ? "md:row-span-2" : ""
               }`}
             >
@@ -63,6 +71,11 @@ export default function Gallery() {
           ))}
         </div>
       </div>
+
+      <Lightbox
+        image={selectedImage}
+        onClose={() => setSelectedImage(null)}
+      />
     </section>
   )
 }

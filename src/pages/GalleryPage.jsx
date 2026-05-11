@@ -1,4 +1,6 @@
 import { motion } from "framer-motion"
+import { useState } from "react"
+import Lightbox from "../components/Lightbox"
 
 const photos = [
   "/images/gallery/gallery-1.jpg",
@@ -13,6 +15,8 @@ const photos = [
 ]
 
 export default function GalleryPage() {
+  const [selectedImage, setSelectedImage] = useState(null)
+
   return (
     <main className="min-h-screen bg-black px-6 pb-24 pt-32 text-white">
       <div className="mx-auto max-w-7xl">
@@ -36,6 +40,7 @@ export default function GalleryPage() {
               initial={{ opacity: 0, y: 35 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.06, duration: 0.6 }}
+              onClick={() => setSelectedImage(photo)}
               className={`group overflow-hidden rounded-3xl border border-white/10 bg-white/5 ${
                 index === 0 || index === 4 || index === 7 ? "md:row-span-2" : ""
               }`}
@@ -49,6 +54,11 @@ export default function GalleryPage() {
           ))}
         </div>
       </div>
+
+      <Lightbox
+        image={selectedImage}
+        onClose={() => setSelectedImage(null)}
+      />
     </main>
   )
 }
