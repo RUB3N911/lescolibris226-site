@@ -15,7 +15,7 @@ const photos = [
 ]
 
 export default function GalleryPage() {
-  const [selectedImage, setSelectedImage] = useState(null)
+  const [selectedIndex, setSelectedIndex] = useState(null)
 
   return (
     <main className="min-h-screen bg-black px-6 pb-24 pt-32 text-white">
@@ -40,7 +40,7 @@ export default function GalleryPage() {
               initial={{ opacity: 0, y: 35 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.06, duration: 0.6 }}
-              onClick={() => setSelectedImage(photo)}
+              onClick={() => setSelectedIndex(index)}
               className={`group overflow-hidden rounded-3xl border border-white/10 bg-white/5 ${
                 index === 0 || index === 4 || index === 7 ? "md:row-span-2" : ""
               }`}
@@ -56,8 +56,10 @@ export default function GalleryPage() {
       </div>
 
       <Lightbox
-        image={selectedImage}
-        onClose={() => setSelectedImage(null)}
+        images={photos}
+        selectedIndex={selectedIndex}
+        setSelectedIndex={setSelectedIndex}
+        onClose={() => setSelectedIndex(null)}
       />
     </main>
   )

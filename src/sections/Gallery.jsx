@@ -12,7 +12,7 @@ const photos = [
 ]
 
 export default function Gallery() {
-  const [selectedImage, setSelectedImage] = useState(null)
+  const [selectedIndex, setSelectedIndex] = useState(null)
 
   return (
     <section
@@ -49,7 +49,7 @@ export default function Gallery() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.08, duration: 0.7 }}
-              onClick={() => setSelectedImage(photo)}
+              onClick={() => setSelectedIndex(index)}
               className={`group relative cursor-pointer overflow-hidden rounded-3xl border border-white/10 bg-white/5 ${
                 index === 0 || index === 3 ? "md:row-span-2" : ""
               }`}
@@ -73,8 +73,10 @@ export default function Gallery() {
       </div>
 
       <Lightbox
-        image={selectedImage}
-        onClose={() => setSelectedImage(null)}
+        images={photos}
+        selectedIndex={selectedIndex}
+        setSelectedIndex={setSelectedIndex}
+        onClose={() => setSelectedIndex(null)}
       />
     </section>
   )
