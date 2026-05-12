@@ -190,7 +190,7 @@ export default function PartnersPage() {
           </p>
 
           <Link
-            to="/contact"
+            to="/become-partner"
             className="mt-8 inline-flex items-center gap-3 rounded-full bg-yellow-500 px-8 py-4 font-bold text-black transition hover:scale-105"
           >
             Proposer un partenariat
