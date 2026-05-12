@@ -64,6 +64,35 @@ export default function Hero() {
               <Play size={18} />
             </Link>
           </div>
+
+          <div className="mt-12 grid max-w-2xl grid-cols-3 gap-4 border-t border-white/10 pt-8">
+            <div>
+              <p className="text-2xl font-black text-yellow-400 sm:text-3xl">
+                25 ans
+              </p>
+              <p className="mt-1 text-xs uppercase tracking-[0.2em] text-white/50">
+                D’histoire
+              </p>
+            </div>
+
+            <div>
+              <p className="text-2xl font-black text-cyan-400 sm:text-3xl">
+                97226
+              </p>
+              <p className="mt-1 text-xs uppercase tracking-[0.2em] text-white/50">
+                Morne-Vert
+              </p>
+            </div>
+
+            <div>
+              <p className="text-2xl font-black text-pink-400 sm:text-3xl">
+                Culture
+              </p>
+              <p className="mt-1 text-xs uppercase tracking-[0.2em] text-white/50">
+                Transmission
+              </p>
+            </div>
+          </div>
         </motion.div>
       </div>
 
