@@ -6,6 +6,7 @@ import Partners from "../sections/Partners"
 import Events from "../sections/Events"
 import Join from "../sections/Join"
 import Heritage from "../sections/Heritage"
+import Energy from "../sections/Energy"
 
 export default function Home() {
   return (
@@ -13,6 +14,7 @@ export default function Home() {
       <Hero />
       <Pillars />
       <Heritage />
+      <Energy />
       <StorySection />
       <Gallery />
       <Partners />
