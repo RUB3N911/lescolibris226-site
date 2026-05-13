@@ -21,6 +21,7 @@ import JoinPage from "./pages/JoinPage"
 import StoryPage from "./pages/StoryPage"
 import PartnersPage from "./pages/PartnersPage"
 import BecomePartnerPage from "./pages/BecomePartnerPage"
+import OrganizationPage from "./pages/OrganizationPage"
 import NotFound from "./pages/NotFound"
 
 function AnimatedRoutes() {
@@ -44,6 +45,7 @@ function AnimatedRoutes() {
           <Route path="/story" element={<StoryPage />} />
           <Route path="/partners" element={<PartnersPage />} />
           <Route path="/become-partner" element={<BecomePartnerPage />} />
+          <Route path="/organization" element={<OrganizationPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </motion.div>

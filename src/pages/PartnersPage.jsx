@@ -24,6 +24,20 @@ const currentPartners = [
     text: "Agir par le sport, la santé, l’éducation et la formation pour mieux-être.",
     link: "https://www.facebook.com/sporteequilibre",
   },
+  {
+    name: "Collectif des Orchestres de Rue - COR Martinique",
+    type: "Partenaire culturel",
+    logo: "/images/partners/cor-martinique.png",
+    text: "Collectif réunissant les orchestres de rue de Martinique autour du carnaval et de la valorisation culturelle.",
+    link: "https://www.facebook.com/p/Collectif-des-Orchestres-de-Rue-COR-Martinique-100063796052858/",
+  },
+  {
+    name: "MIR",
+    type: "Partenaire mémoriel",
+    logo: "/images/partners/mir.png",
+    text: "Collaboration autour du Konvwa Ba Réparasyon et des actions de transmission mémorielle et culturelle.",
+    link: "https://www.mirmartinique.com/",
+  },
 ]
 
 const partnerTypes = [

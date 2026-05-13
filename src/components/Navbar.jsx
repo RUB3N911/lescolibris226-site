@@ -21,6 +21,7 @@ export default function Navbar() {
   const links = [
     { label: "Accueil", to: "/" },
     { label: "Histoire", to: "/story" },
+    { label: "Organisation", to: "/organization" },
     { label: "Événements", to: "/events" },
     { label: "Galerie", to: "/gallery" },
     { label: "Partenaires", to: "/partners" },

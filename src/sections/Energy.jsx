@@ -17,7 +17,7 @@ export default function Energy() {
           <img
             src="/images/gallery/gallery-1.jpg"
             alt="Les Colibris 226"
-            className="h-[620px] w-full object-cover"
+            className="h-[380px] w-full object-cover sm:h-[450px] md:h-[620px]"
           />
         </motion.div>
 
