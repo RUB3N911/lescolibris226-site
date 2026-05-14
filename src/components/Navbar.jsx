@@ -51,9 +51,9 @@ export default function Navbar() {
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 transition-all duration-500">
           <Link to="/" className="block">
-            <h1 className="text-xl font-black tracking-widest text-white">
-              LES COLIBRIS <span className="text-yellow-400">226</span>
-            </h1>
+            <h1 className="whitespace-nowrap text-xl font-black tracking-widest text-white">
+  LES COLIBRIS <span className="text-yellow-400">226</span>
+</h1>
           </Link>
 
           <nav className="hidden items-center gap-10 md:flex">
