@@ -2,10 +2,9 @@ import { motion } from "framer-motion"
 import { Camera } from "lucide-react"
 
 const posts = [
-  "/images/gallery/gallery-1.jpg",
-  "/images/gallery/gallery-2.jpg",
-  "/images/gallery/gallery-3.jpg",
-  "/images/gallery/gallery-4.jpg",
+  "/images/instagram/instagram-1.webp",
+  "/images/instagram/instagram-2.webp",
+  "/images/instagram/instagram-3.webp",
 ]
 
 export default function InstagramSection() {
@@ -49,7 +48,7 @@ export default function InstagramSection() {
         </motion.div>
 
         {/* GRID */}
-        <div className="mt-16 grid gap-5 md:grid-cols-4">
+        <div className="mt-16 grid gap-5 md:grid-cols-3">
           {posts.map((post, index) => (
             <motion.a
               key={post}
