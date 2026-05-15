@@ -59,7 +59,7 @@ export default function Contact() {
               </a>
 
               <a
-                href="https://wa.me/596000000000"
+                href={whatsappGeneral}
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center gap-4 transition hover:text-yellow-400"
