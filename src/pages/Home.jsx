@@ -8,6 +8,7 @@ import Join from "../sections/Join"
 import Heritage from "../sections/Heritage"
 import Energy from "../sections/Energy"
 import InstagramSection from "../sections/Instagram"
+import FinalCTA from "../sections/FinalCTA"
 
 export default function Home() {
   return (
@@ -20,6 +21,7 @@ export default function Home() {
       <Gallery />
       <Partners />
       <Events />
+      <FinalCTA />
       <InstagramSection />
       <Join />
     </>
