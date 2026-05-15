@@ -110,7 +110,7 @@ export default function Navbar() {
               src="/images/logo.png"
               alt=""
               aria-hidden="true"
-              className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 object-contain opacity-[0.25]"
+              className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 object-contain opacity-[0.18]"
             />
             {/* LINKS */}
             {links.map((link) => (
