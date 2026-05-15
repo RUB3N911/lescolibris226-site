@@ -1,6 +1,7 @@
 import { motion } from "framer-motion"
 import { Link } from "react-router-dom"
 import { ArrowRight } from "lucide-react"
+import { fadeUp } from "../animations/variants"
 
 export default function Heritage() {
   return (
@@ -9,11 +10,11 @@ export default function Heritage() {
 
       <div className="relative z-10 mx-auto grid max-w-7xl gap-12 lg:grid-cols-2 lg:items-center">
         <motion.div
-          initial={{ opacity: 0, x: -35 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-        >
+  variants={fadeUp}
+  initial="hidden"
+  whileInView="visible"
+  viewport={{ once: true }}
+>
           <p className="mb-4 text-sm uppercase tracking-[0.35em] text-yellow-500">
             Depuis 2001
           </p>
@@ -24,12 +25,11 @@ export default function Heritage() {
         </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, x: 35 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-8 backdrop-blur-xl"
-        >
+  variants={fadeUp}
+  initial="hidden"
+  whileInView="visible"
+  viewport={{ once: true }}
+>
           <p className="text-lg leading-8 text-white/65">
             Née au Morne-Vert, l’association Les Colibris 226 porte depuis plus
             de deux décennies une énergie culturelle vivante, mêlant carnaval,
