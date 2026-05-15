@@ -7,12 +7,11 @@ export default function Energy() {
       <div className="absolute left-0 top-0 h-96 w-96 rounded-full bg-pink-500/10 blur-3xl" />
 
       <div className="relative z-10 mx-auto grid max-w-7xl gap-16 lg:grid-cols-2 lg:items-center">
-        {/* IMAGE */}
         <motion.div
           variants={fadeUp}
-initial="hidden"
-whileInView="visible"
-viewport={{ once: true }}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
           className="overflow-hidden rounded-[2rem]"
         >
           <img
@@ -22,12 +21,11 @@ viewport={{ once: true }}
           />
         </motion.div>
 
-        {/* TEXT */}
         <motion.div
           variants={fadeUp}
-initial="hidden"
-whileInView="visible"
-viewport={{ once: true }}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
         >
           <p className="mb-4 text-sm uppercase tracking-[0.35em] text-yellow-500">
             Une énergie vivante
@@ -40,13 +38,13 @@ viewport={{ once: true }}
           </h2>
 
           <p className="mt-8 text-lg leading-8 text-white/65">
-            Depuis plus de 25 ans, Les Colibris 226 font vibrer le
-            Morne-Vert au rythme du carnaval, du partage et de la transmission.
+            Depuis plus de 25 ans, Les Colibris 226 font vibrer le Morne-Vert au
+            rythme du carnaval, du partage et de la transmission.
           </p>
 
           <blockquote className="mt-10 border-l-4 border-yellow-500 pl-6 text-2xl italic text-white/85">
-            “Le carnaval n’est pas seulement une fête.
-            C’est une mémoire qui marche.”
+            “Le carnaval n’est pas seulement une fête. C’est une mémoire qui
+            marche.”
           </blockquote>
         </motion.div>
       </div>
