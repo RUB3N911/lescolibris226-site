@@ -10,10 +10,10 @@ export default function FinalCTA() {
 
       <div className="relative z-10 mx-auto max-w-6xl rounded-[2.5rem] border border-white/10 bg-white/[0.03] p-10 backdrop-blur-xl md:p-16">
         <motion.div
-          initial={{ opacity: 0, y: 35 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+          variants={fadeUp}
+  initial="hidden"
+  whileInView="visible"
+  viewport={{ once: true }}
           className="mx-auto max-w-4xl text-center"
         >
           <p className="mb-4 text-sm uppercase tracking-[0.35em] text-yellow-500">
@@ -33,10 +33,10 @@ export default function FinalCTA() {
         <div className="mt-14 grid gap-6 md:grid-cols-3">
           {/* REJOINDRE */}
           <motion.div
-            initial={{ opacity: 0, y: 35 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1, duration: 0.7 }}
+            variants={fadeUp}
+  initial="hidden"
+  whileInView="visible"
+  viewport={{ once: true }}
             className="rounded-[2rem] border border-white/10 bg-black/30 p-8 text-center"
           >
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-yellow-500 text-black">
@@ -61,10 +61,10 @@ export default function FinalCTA() {
 
           {/* PARTENARIAT */}
           <motion.div
-            initial={{ opacity: 0, y: 35 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2, duration: 0.7 }}
+            variants={fadeUp}
+  initial="hidden"
+  whileInView="visible"
+  viewport={{ once: true }}
             className="rounded-[2rem] border border-white/10 bg-black/30 p-8 text-center"
           >
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-pink-500 text-black">
@@ -89,10 +89,10 @@ export default function FinalCTA() {
 
           {/* CONTACT */}
           <motion.div
-            initial={{ opacity: 0, y: 35 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3, duration: 0.7 }}
+            variants={fadeUp}
+  initial="hidden"
+  whileInView="visible"
+  viewport={{ once: true }}
             className="rounded-[2rem] border border-white/10 bg-black/30 p-8 text-center"
           >
             <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-cyan-500 text-black">
