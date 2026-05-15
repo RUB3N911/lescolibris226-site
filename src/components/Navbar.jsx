@@ -96,14 +96,11 @@ export default function Navbar() {
             className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-10 bg-black"
           >
             <img
-              src="/images/logo.png"
-              alt="Les Colibris 226"
-              className="mb-6 h-28 w-28 object-contain"
-            />
-
-            <p className="mb-4 text-sm uppercase tracking-[0.35em] text-yellow-500">
-              Les Colibris 226
-            </p>
+  src="/images/logo.png"
+  alt=""
+  aria-hidden="true"
+  className="pointer-events-none absolute inset-0 m-auto h-80 w-80 object-contain opacity-10"
+/>
 
             {links.map((link) => (
               <Link
