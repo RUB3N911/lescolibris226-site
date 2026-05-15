@@ -36,7 +36,7 @@ export default function Navbar() {
     }`
 
   const getMobileLinkClass = (path) =>
-    `text-3xl font-bold transition ${
+    `relative z-10 text-3xl font-bold transition ${
       location.pathname === path ? "text-yellow-400" : "text-white"
     }`
 
@@ -52,11 +52,11 @@ export default function Navbar() {
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 transition-all duration-500">
           <Link to="/" className="block">
             <h1 className="whitespace-nowrap text-xl font-black tracking-widest text-white">
-  LES COLIBRIS <span className="text-yellow-400">226</span>
-</h1>
+              LES COLIBRIS <span className="text-yellow-400">226</span>
+            </h1>
           </Link>
 
-          <nav className="hidden items-center gap-10 md:flex">
+          <nav className="hidden items-center gap-7 md:flex">
             {links.map((link) => (
               <Link
                 key={link.label}
@@ -93,36 +93,18 @@ export default function Navbar() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
             transition={{ duration: 0.4 }}
-            className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-10 bg-black"
+            className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-8 overflow-hidden bg-black"
           >
             <img
-  src="/images/logo.png"
-  alt=""
-  aria-hidden="true"
-  className="pointer-events-none absolute inset-0 m-auto h-80 w-80 object-contain opacity-10"
-/>
+              src="/images/logo.png"
+              alt=""
+              aria-hidden="true"
+              className="pointer-events-none absolute left-1/2 top-1/2 h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2 object-contain opacity-[0.06]"
+            />
 
             {links.map((link) => (
               <Link
                 key={link.label}
                 to={link.to}
                 onClick={() => setOpen(false)}
-                className={getMobileLinkClass(link.to)}
-              >
-                {link.label}
-              </Link>
-            ))}
-
-            <Link
-              to="/join"
-              onClick={() => setOpen(false)}
-              className="mt-4 rounded-full bg-yellow-500 px-8 py-4 font-bold text-black"
-            >
-              Rejoindre
-            </Link>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
-  )
-}
+                className={getMobileLinkClass(link.to
