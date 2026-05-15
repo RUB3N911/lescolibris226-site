@@ -15,10 +15,10 @@ export default function InstagramSection() {
       <div className="relative z-10 mx-auto max-w-7xl">
         {/* HEADER */}
         <motion.div
-          initial={{ opacity: 0, y: 35 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+          variants={fadeUp}
+  initial="hidden"
+  whileInView="visible"
+  viewport={{ once: true }}
           className="flex flex-col items-start justify-between gap-8 md:flex-row md:items-end"
         >
           <div className="max-w-3xl">
