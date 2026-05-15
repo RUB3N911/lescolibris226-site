@@ -20,8 +20,8 @@ export default function Home() {
       <Gallery />
       <Partners />
       <Events />
-      <FinalCTA />
       <InstagramSection />
+      <FinalCTA />
     </>
   )
 }
