@@ -1,5 +1,6 @@
 import { motion } from "framer-motion"
 import { Camera } from "lucide-react"
+import { fadeUp } from "../animations/variants"
 
 const posts = [
   "/images/instagram/instagram-1.webp",
@@ -13,12 +14,11 @@ export default function InstagramSection() {
       <div className="absolute right-0 top-0 h-96 w-96 rounded-full bg-pink-500/10 blur-3xl" />
 
       <div className="relative z-10 mx-auto max-w-7xl">
-        {/* HEADER */}
         <motion.div
           variants={fadeUp}
-  initial="hidden"
-  whileInView="visible"
-  viewport={{ once: true }}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
           className="flex flex-col items-start justify-between gap-8 md:flex-row md:items-end"
         >
           <div className="max-w-3xl">
@@ -47,45 +47,43 @@ export default function InstagramSection() {
           </a>
         </motion.div>
 
-        {/* MOBILE IMAGE */}
-<a
-  href="https://www.instagram.com/les_colibris_226/"
-  target="_blank"
-  rel="noreferrer"
-  className="mt-16 block overflow-hidden rounded-[2rem] md:hidden"
->
-  <img
-    src="/images/instagram/mobile-instagram.webp"
-    alt="Instagram Les Colibris 226"
-    className="w-full object-cover"
-  />
-</a>
+        <a
+          href="https://www.instagram.com/les_colibris_226/"
+          target="_blank"
+          rel="noreferrer"
+          className="mt-16 block overflow-hidden rounded-[2rem] md:hidden"
+        >
+          <img
+            src="/images/instagram/mobile-instagram.webp"
+            alt="Instagram Les Colibris 226"
+            className="w-full object-cover"
+          />
+        </a>
 
-{/* DESKTOP GRID */}
-<div className="mt-16 hidden gap-5 md:grid md:grid-cols-3">
-  {posts.map((post, index) => (
-    <motion.a
-      key={post}
-      href="https://www.instagram.com/les_colibris_226/"
-      target="_blank"
-      rel="noreferrer"
-      initial={{ opacity: 0, y: 35 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{
-        delay: index * 0.08,
-        duration: 0.7,
-      }}
-      className="group overflow-hidden rounded-[2rem]"
-    >
-      <img
-        src={post}
-        alt="Instagram Les Colibris 226"
-        className="h-[340px] w-full object-cover transition duration-700 group-hover:scale-110"
-      />
-    </motion.a>
-  ))}
-</div>
+        <div className="mt-16 hidden gap-5 md:grid md:grid-cols-3">
+          {posts.map((post, index) => (
+            <motion.a
+              key={post}
+              href="https://www.instagram.com/les_colibris_226/"
+              target="_blank"
+              rel="noreferrer"
+              initial={{ opacity: 0, y: 35 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{
+                delay: index * 0.08,
+                duration: 0.7,
+              }}
+              className="group overflow-hidden rounded-[2rem]"
+            >
+              <img
+                src={post}
+                alt="Instagram Les Colibris 226"
+                className="h-[340px] w-full object-cover transition duration-700 group-hover:scale-110"
+              />
+            </motion.a>
+          ))}
+        </div>
       </div>
     </section>
   )
