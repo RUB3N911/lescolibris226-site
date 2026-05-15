@@ -6,6 +6,7 @@ import { Link, useLocation } from "react-router-dom"
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
+
   const location = useLocation()
 
   useEffect(() => {
@@ -36,26 +37,32 @@ export default function Navbar() {
     }`
 
   const getMobileLinkClass = (path) =>
-    `relative z-10 text-3xl font-bold transition ${
-      location.pathname === path ? "text-yellow-400" : "text-white"
+    `relative z-10 text-3xl font-black transition ${
+      location.pathname === path
+        ? "text-yellow-400"
+        : "text-white hover:text-yellow-400"
     }`
 
   return (
     <>
+      {/* HEADER */}
       <header
         className={`fixed left-0 top-0 z-50 w-full transition-all duration-500 ${
           scrolled
-            ? "border-b border-white/10 bg-black/60 py-3 shadow-2xl backdrop-blur-2xl"
+            ? "border-b border-white/10 bg-black/70 py-3 shadow-2xl backdrop-blur-2xl"
             : "bg-transparent py-5"
         }`}
       >
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 transition-all duration-500">
-          <Link to="/" className="block">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6">
+          {/* LOGO */}
+          <Link to="/" className="relative z-10">
             <h1 className="whitespace-nowrap text-xl font-black tracking-widest text-white">
-              LES COLIBRIS <span className="text-yellow-400">226</span>
+              LES COLIBRIS{" "}
+              <span className="text-yellow-400">226</span>
             </h1>
           </Link>
 
+          {/* DESKTOP NAV */}
           <nav className="hidden items-center gap-7 md:flex">
             {links.map((link) => (
               <Link
@@ -68,6 +75,7 @@ export default function Navbar() {
             ))}
           </nav>
 
+          {/* CTA */}
           <div className="hidden md:block">
             <Link
               to="/join"
@@ -77,15 +85,17 @@ export default function Navbar() {
             </Link>
           </div>
 
+          {/* MOBILE BUTTON */}
           <button
             onClick={() => setOpen(!open)}
-            className="text-white md:hidden"
+            className="relative z-50 text-white md:hidden"
           >
-            {open ? <X size={32} /> : <Menu size={32} />}
+            {open ? <X size={34} /> : <Menu size={34} />}
           </button>
         </div>
       </header>
 
+      {/* MOBILE MENU */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -95,16 +105,37 @@ export default function Navbar() {
             transition={{ duration: 0.4 }}
             className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-8 overflow-hidden bg-black"
           >
+            {/* BACKGROUND LOGO */}
             <img
               src="/images/logo.png"
               alt=""
               aria-hidden="true"
-              className="pointer-events-none absolute left-1/2 top-1/2 h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2 object-contain opacity-[0.06]"
+              className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 object-contain opacity-[0.05]"
             />
 
+            {/* LINKS */}
             {links.map((link) => (
               <Link
                 key={link.label}
                 to={link.to}
                 onClick={() => setOpen(false)}
-                className={getMobileLinkClass(link.to
+                className={getMobileLinkClass(link.to)}
+              >
+                {link.label}
+              </Link>
+            ))}
+
+            {/* CTA */}
+            <Link
+              to="/join"
+              onClick={() => setOpen(false)}
+              className="relative z-10 mt-4 rounded-full bg-yellow-500 px-8 py-4 font-bold text-black transition hover:scale-105"
+            >
+              Rejoindre
+            </Link>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  )
+}
