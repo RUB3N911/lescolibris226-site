@@ -77,7 +77,7 @@ export default function Footer() {
             </p>
 
             <a
-              href="mailto:contact@lescolibris226.com"
+              href="mailto:Lescolibris972mv@hotmail.fr"
               className="flex items-center gap-3"
             >
               <Mail size={20} />
