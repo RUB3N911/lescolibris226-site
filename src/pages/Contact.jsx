@@ -1,4 +1,5 @@
 import { motion } from "framer-motion"
+import { whatsappGeneral } from "../lib/links"
 import {
   Mail,
   Phone,
@@ -50,11 +51,11 @@ export default function Contact() {
 
             <div className="mt-10 flex flex-col gap-8 text-white/75">
               <a
-                href="mailto:contact@lescolibris226.com"
+                href="mailto:Lescolibris972mv@hotmail.fr"
                 className="flex items-center gap-4 transition hover:text-yellow-400"
               >
                 <Mail size={24} />
-                contact@lescolibris226.com
+                Lescolibris972mv@hotmail.fr
               </a>
 
               <a
@@ -68,11 +69,11 @@ export default function Contact() {
               </a>
 
               <a
-                href="tel:+596000000000"
+                href={whatsappGeneral}
                 className="flex items-center gap-4 transition hover:text-yellow-400"
               >
                 <Phone size={24} />
-                +596 000 00 00 00
+                +596 696 29 89 21
               </a>
 
               <div className="flex items-center gap-4">
@@ -81,7 +82,7 @@ export default function Contact() {
               </div>
 
               <a
-                href="https://instagram.com/"
+                href="https://www.instagram.com/les_colibris_226"
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center gap-4 transition hover:text-yellow-400"
