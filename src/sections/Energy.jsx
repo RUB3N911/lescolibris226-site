@@ -1,4 +1,5 @@
 import { motion } from "framer-motion"
+import { fadeUp } from "../animations/variants"
 
 export default function Energy() {
   return (
@@ -8,10 +9,10 @@ export default function Energy() {
       <div className="relative z-10 mx-auto grid max-w-7xl gap-16 lg:grid-cols-2 lg:items-center">
         {/* IMAGE */}
         <motion.div
-          initial={{ opacity: 0, x: -35 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+          variants={fadeUp}
+initial="hidden"
+whileInView="visible"
+viewport={{ once: true }}
           className="overflow-hidden rounded-[2rem]"
         >
           <img
@@ -23,10 +24,10 @@ export default function Energy() {
 
         {/* TEXT */}
         <motion.div
-          initial={{ opacity: 0, x: 35 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+          variants={fadeUp}
+initial="hidden"
+whileInView="visible"
+viewport={{ once: true }}
         >
           <p className="mb-4 text-sm uppercase tracking-[0.35em] text-yellow-500">
             Une énergie vivante
