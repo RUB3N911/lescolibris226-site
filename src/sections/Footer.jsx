@@ -1,5 +1,6 @@
 import { Camera, Mail, MapPin, MessageCircle, Phone } from "lucide-react"
 import { Link } from "react-router-dom"
+import { whatsappGeneral } from "../lib/links"
 
 export default function Footer() {
   return (
@@ -83,13 +84,13 @@ export default function Footer() {
               contact@lescolibris226.com
             </a>
 
-            <a href="tel:+596000000000" className="flex items-center gap-3">
+            <a href="tel:+596696298921" className="flex items-center gap-3">
               <Phone size={20} />
-              +596 000 00 00 00
+              +596 696 29 89 21
             </a>
 
             <a
-              href="https://wa.me/596000000000"
+              href={whatsappGeneral}
               target="_blank"
               rel="noreferrer"
               className="flex items-center gap-3"
