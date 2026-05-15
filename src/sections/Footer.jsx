@@ -81,7 +81,7 @@ export default function Footer() {
               className="flex items-center gap-3"
             >
               <Mail size={20} />
-              contact@lescolibris226.com
+              Lescolibris972mv@hotmail.fr
             </a>
 
             <a href="tel:+596696298921" className="flex items-center gap-3">
