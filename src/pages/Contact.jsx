@@ -69,7 +69,7 @@ export default function Contact() {
               </a>
 
               <a
-                href={whatsappGeneral}
+                href="tel:+596696298921"
                 className="flex items-center gap-4 transition hover:text-yellow-400"
               >
                 <Phone size={24} />
