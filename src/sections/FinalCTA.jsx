@@ -1,6 +1,7 @@
 import { motion } from "framer-motion"
 import { ArrowRight, Handshake, Mail } from "lucide-react"
 import { Link } from "react-router-dom"
+import { fadeUp } from "../animations/variants"
 
 export default function FinalCTA() {
   return (
