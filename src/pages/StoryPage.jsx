@@ -1,4 +1,6 @@
 import { motion } from "framer-motion"
+import { useState } from "react"
+import Lightbox from "../components/Lightbox"
 
 const timeline = [
   {
@@ -58,6 +60,10 @@ const timeline = [
 ]
 
 export default function StoryPage() {
+  const [selectedIndex, setSelectedIndex] = useState(null)
+
+  const timelineImages = timeline.map((item) => item.image)
+
   return (
     <main className="relative min-h-screen overflow-hidden bg-black px-6 pb-24 pt-32 text-white">
       <div className="absolute left-0 top-20 h-96 w-96 rounded-full bg-yellow-500/10 blur-3xl" />
@@ -78,8 +84,8 @@ export default function StoryPage() {
           </h1>
 
           <p className="mt-6 max-w-3xl text-lg leading-8 text-white/65">
-            Les Colibris 226 racontent une histoire de transmission, de carnaval,
-            de cohésion et de culture au Morne-Vert.
+            Les Colibris 226 racontent une histoire de transmission, de
+            carnaval, de cohésion et de culture au Morne-Vert.
           </p>
         </motion.div>
 
@@ -114,13 +120,21 @@ export default function StoryPage() {
                   whileHover={{ scale: 1.03 }}
                   src={item.image}
                   alt={item.title}
-                  className="h-[420px] w-full rounded-[2rem] object-cover"
+                  onClick={() => setSelectedIndex(index)}
+                  className="h-[420px] w-full cursor-pointer rounded-[2rem] object-cover transition"
                 />
               </motion.div>
             ))}
           </div>
         </div>
       </div>
+
+      <Lightbox
+        images={timelineImages}
+        selectedIndex={selectedIndex}
+        setSelectedIndex={setSelectedIndex}
+        onClose={() => setSelectedIndex(null)}
+      />
     </main>
   )
 }
