@@ -38,10 +38,22 @@ const timeline = [
     image: "/images/story/2015.webp",
   },
   {
+    year: "2020",
+    title: "Résilience & continuité",
+    text: "Maintien de la dynamique malgré les périodes difficiles.",
+    image: "/images/story/2020.webp",
+  },
+  {
     year: "2024",
     title: "Dix ans après",
     text: "Les majorettes croates reviennent accompagner Les Colibris dans plusieurs parades.",
     image: "/images/story/2024.webp",
+  },
+  {
+    year: "2026",
+    title: "25 ans d’énergie culturelle",
+    text: "Nouvelle identité, modernisation, rayonnement digital.",
+    image: "/images/story/2026.webp",
   },
 ]
 
