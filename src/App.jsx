@@ -24,6 +24,8 @@ import BecomePartnerPage from "./pages/BecomePartnerPage"
 import OrganizationPage from "./pages/OrganizationPage"
 import NotFound from "./pages/NotFound"
 
+import AdminLogin from "./pages/AdminLogin"
+
 function AnimatedRoutes() {
   const location = useLocation()
 
@@ -46,6 +48,7 @@ function AnimatedRoutes() {
           <Route path="/partners" element={<PartnersPage />} />
           <Route path="/become-partner" element={<BecomePartnerPage />} />
           <Route path="/organization" element={<OrganizationPage />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </motion.div>
