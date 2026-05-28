@@ -91,6 +91,7 @@ export default function AdminEvents() {
             onChange={handleChange}
             className="rounded-2xl border border-white/10 bg-black/40 px-5 py-4 outline-none focus:border-yellow-500"
           >
+            <option value="featured">À la une</option>
             <option value="upcoming">À venir</option>
             <option value="ongoing">En cours</option>
             <option value="past">Passé</option>
