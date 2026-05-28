@@ -27,6 +27,8 @@ import NotFound from "./pages/NotFound"
 import AdminLogin from "./pages/AdminLogin"
 import AdminDashboard from "./pages/AdminDashboard"
 import ProtectedAdminRoute from "./components/ProtectedAdminRoute"
+import AdminGallery from "./pages/AdminGallery"
+import AdminEvents from "./pages/AdminEvents"
 
 function AnimatedRoutes() {
   const location = useLocation()
@@ -52,6 +54,23 @@ function AnimatedRoutes() {
           <Route path="/organization" element={<OrganizationPage />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin" element={<ProtectedAdminRoute><AdminDashboard /></ProtectedAdminRoute>}/>
+          <Route
+  path="/admin/gallery"
+  element={
+    <ProtectedAdminRoute>
+      <AdminGallery />
+    </ProtectedAdminRoute>
+  }
+/>
+
+<Route
+  path="/admin/events"
+  element={
+    <ProtectedAdminRoute>
+      <AdminEvents />
+    </ProtectedAdminRoute>
+  }
+/>
           <Route path="*" element={<NotFound />} />
         </Routes>
       </motion.div>
