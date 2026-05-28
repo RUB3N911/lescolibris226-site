@@ -1,7 +1,10 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { supabase } from "../lib/supabase"
 
 export default function AdminEvents() {
+  const [events, setEvents] = useState([])
+  const [message, setMessage] = useState("")
+
   const [form, setForm] = useState({
     title: "",
     date: "",
@@ -11,7 +14,20 @@ export default function AdminEvents() {
     status: "upcoming",
   })
 
-  const [message, setMessage] = useState("")
+  useEffect(() => {
+    fetchEvents()
+  }, [])
+
+  const fetchEvents = async () => {
+    const { data, error } = await supabase
+      .from("events")
+      .select("*")
+      .order("created_at", { ascending: false })
+
+    if (!error) {
+      setEvents(data || [])
+    }
+  }
 
   const handleChange = (e) => {
     setForm({
@@ -40,18 +56,34 @@ export default function AdminEvents() {
       image_url: "",
       status: "upcoming",
     })
+
+    fetchEvents()
+  }
+
+  const updateStatus = async (id, status) => {
+    const { error } = await supabase
+      .from("events")
+      .update({ status })
+      .eq("id", id)
+
+    if (!error) {
+      fetchEvents()
+    }
   }
 
   return (
     <main className="min-h-screen bg-black px-6 py-32 text-white">
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto max-w-6xl">
         <p className="mb-4 text-sm uppercase tracking-[0.35em] text-yellow-500">
           Administration
         </p>
 
-        <h1 className="text-5xl font-black">Ajouter un événement</h1>
+        <h1 className="text-5xl font-black">Événements</h1>
 
-        <form onSubmit={handleSubmit} className="mt-12 grid gap-5">
+        <form
+          onSubmit={handleSubmit}
+          className="mt-12 grid gap-5 rounded-[2rem] border border-white/10 bg-white/[0.03] p-8"
+        >
           <input
             name="title"
             value={form.title}
@@ -116,6 +148,47 @@ export default function AdminEvents() {
 
           {message && <p className="text-white/70">{message}</p>}
         </form>
+
+        <section className="mt-16">
+          <h2 className="text-3xl font-black">Événements existants</h2>
+
+          <div className="mt-8 grid gap-5">
+            {events.map((event) => (
+              <div
+                key={event.id}
+                className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-6"
+              >
+                <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+                  <div>
+                    <p className="text-sm uppercase tracking-[0.25em] text-yellow-400">
+                      {event.status}
+                    </p>
+
+                    <h3 className="mt-2 text-2xl font-black">
+                      {event.title}
+                    </h3>
+
+                    <p className="mt-2 text-white/50">
+                      {event.date} — {event.location}
+                    </p>
+                  </div>
+
+                  <select
+                    value={event.status}
+                    onChange={(e) => updateStatus(event.id, e.target.value)}
+                    className="rounded-2xl border border-white/10 bg-black px-5 py-3 outline-none focus:border-yellow-500"
+                  >
+                    <option value="featured">À la une</option>
+                    <option value="upcoming">À venir</option>
+                    <option value="ongoing">En cours</option>
+                    <option value="past">Passé</option>
+                    <option value="hidden">Masqué</option>
+                  </select>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
       </div>
     </main>
   )
