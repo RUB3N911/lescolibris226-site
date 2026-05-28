@@ -4,6 +4,8 @@ import { supabase } from "../lib/supabase"
 export default function AdminEvents() {
   const [events, setEvents] = useState([])
   const [message, setMessage] = useState("")
+  const [preview, setPreview] = useState(null)
+  const [uploading, setUploading] = useState(false)
 
   const [form, setForm] = useState({
     title: "",
@@ -24,9 +26,7 @@ export default function AdminEvents() {
       .select("*")
       .order("created_at", { ascending: false })
 
-    if (!error) {
-      setEvents(data || [])
-    }
+    if (!error) setEvents(data || [])
   }
 
   const handleChange = (e) => {
@@ -34,6 +34,40 @@ export default function AdminEvents() {
       ...form,
       [e.target.name]: e.target.value,
     })
+  }
+
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+
+    setPreview(URL.createObjectURL(file))
+    setUploading(true)
+    setMessage("")
+
+    const fileExt = file.name.split(".").pop()
+    const fileName = `${Date.now()}.${fileExt}`
+    const filePath = `events/${fileName}`
+
+    const { error } = await supabase.storage
+      .from("events")
+      .upload(filePath, file)
+
+    if (error) {
+      setMessage("Erreur lors de l’upload de l’image.")
+      setUploading(false)
+      return
+    }
+
+    const { data } = supabase.storage
+      .from("events")
+      .getPublicUrl(filePath)
+
+    setForm((prev) => ({
+      ...prev,
+      image_url: data.publicUrl,
+    }))
+
+    setUploading(false)
   }
 
   const handleSubmit = async (e) => {
@@ -48,6 +82,8 @@ export default function AdminEvents() {
     }
 
     setMessage("Événement ajouté avec succès.")
+    setPreview(null)
+
     setForm({
       title: "",
       date: "",
@@ -66,9 +102,7 @@ export default function AdminEvents() {
       .update({ status })
       .eq("id", id)
 
-    if (!error) {
-      fetchEvents()
-    }
+    if (!error) fetchEvents()
   }
 
   return (
@@ -109,13 +143,32 @@ export default function AdminEvents() {
             className="rounded-2xl border border-white/10 bg-black/40 px-5 py-4 outline-none focus:border-yellow-500"
           />
 
-          <input
-            name="image_url"
-            value={form.image_url}
-            onChange={handleChange}
-            placeholder="URL de l’image"
-            className="rounded-2xl border border-white/10 bg-black/40 px-5 py-4 outline-none focus:border-yellow-500"
-          />
+          <label className="rounded-2xl border border-dashed border-white/20 bg-black/40 p-6">
+            <span className="block text-sm uppercase tracking-[0.25em] text-yellow-500">
+              Image de l’événement
+            </span>
+
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="mt-4 block w-full text-sm text-white/70"
+            />
+
+            {uploading && (
+              <p className="mt-4 text-sm text-yellow-400">
+                Upload en cours...
+              </p>
+            )}
+
+            {preview && (
+              <img
+                src={preview}
+                alt="Prévisualisation"
+                className="mt-6 h-72 w-full rounded-2xl object-cover"
+              />
+            )}
+          </label>
 
           <select
             name="status"
@@ -141,7 +194,8 @@ export default function AdminEvents() {
 
           <button
             type="submit"
-            className="rounded-full bg-yellow-500 px-8 py-4 font-bold text-black"
+            disabled={uploading}
+            className="rounded-full bg-yellow-500 px-8 py-4 font-bold text-black disabled:opacity-50"
           >
             Ajouter l’événement
           </button>
@@ -159,18 +213,28 @@ export default function AdminEvents() {
                 className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-6"
               >
                 <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-                  <div>
-                    <p className="text-sm uppercase tracking-[0.25em] text-yellow-400">
-                      {event.status}
-                    </p>
+                  <div className="flex gap-5">
+                    {event.image_url && (
+                      <img
+                        src={event.image_url}
+                        alt={event.title}
+                        className="h-24 w-32 rounded-xl object-cover"
+                      />
+                    )}
 
-                    <h3 className="mt-2 text-2xl font-black">
-                      {event.title}
-                    </h3>
+                    <div>
+                      <p className="text-sm uppercase tracking-[0.25em] text-yellow-400">
+                        {event.status}
+                      </p>
 
-                    <p className="mt-2 text-white/50">
-                      {event.date} — {event.location}
-                    </p>
+                      <h3 className="mt-2 text-2xl font-black">
+                        {event.title}
+                      </h3>
+
+                      <p className="mt-2 text-white/50">
+                        {event.date} — {event.location}
+                      </p>
+                    </div>
                   </div>
 
                   <select
