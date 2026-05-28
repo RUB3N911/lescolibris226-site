@@ -1,6 +1,8 @@
 import { motion } from "framer-motion"
 import { CalendarDays, MapPin, ArrowRight } from "lucide-react"
 import { Link } from "react-router-dom"
+import { useEffect, useState } from "react"
+import { supabase } from "../lib/supabase"
 
 const upcomingEvents = [
   {
