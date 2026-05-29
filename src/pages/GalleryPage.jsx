@@ -1,58 +1,70 @@
 import { motion } from "framer-motion"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Lightbox from "../components/Lightbox"
+import { supabase } from "../lib/supabase"
 
 const sections = [
   {
     title: "Les Premiers Battements",
     subtitle: "Depuis 2001",
     text: "Les débuts des Colibris, les premiers défilés et les fondations de l’association.",
-    folder: "premiers-battements",
-    photos: [],
+    category: "premiers-battements",
   },
   {
     title: "L’Énergie du Carnaval",
     subtitle: "Le cœur du mouvement",
     text: "Percussions, foule, costumes et vibration collective dans les rues.",
-    folder: "carnaval",
-    photos: [],
+    category: "carnaval",
   },
   {
     title: "Les Visages",
     subtitle: "Celles et ceux qui font vivre les Colibris",
     text: "Portraits, regards, générations et énergie humaine.",
-    folder: "visages",
-    photos: [],
+    category: "visages",
   },
   {
     title: "Les Coulisses",
     subtitle: "Avant le battement",
     text: "Répétitions, préparations, moments off et vie associative.",
-    folder: "coulisses",
-    photos: [],
+    category: "coulisses",
   },
   {
     title: "Transmission & Culture",
     subtitle: "Faire vivre l’héritage",
     text: "Actions, projets culturels, cohésion et transmission aux nouvelles générations.",
-    folder: "transmission-culture",
-    photos: [],
+    category: "transmission-culture",
   },
   {
     title: "Partenaires & moments officiels",
     subtitle: "Les forces qui nous accompagnent",
     text: "Institutions, sponsors, partenaires et moments forts officiels.",
-    folder: "partenaires-officiels",
-    photos: [],
+    category: "partenaires-officiels",
   },
 ]
 
 export default function GalleryPage() {
+  const [images, setImages] = useState([])
   const [selectedIndex, setSelectedIndex] = useState(null)
   const [currentImages, setCurrentImages] = useState([])
 
-  const openGallery = (images, index) => {
-    setCurrentImages(images)
+  useEffect(() => {
+    fetchImages()
+  }, [])
+
+  const fetchImages = async () => {
+    const { data, error } = await supabase
+      .from("gallery_images")
+      .select("*")
+      .eq("status", "published")
+      .order("created_at", { ascending: false })
+
+    if (!error) {
+      setImages(data || [])
+    }
+  }
+
+  const openGallery = (sectionImages, index) => {
+    setCurrentImages(sectionImages.map((image) => image.image_url))
     setSelectedIndex(index)
   }
 
@@ -62,7 +74,6 @@ export default function GalleryPage() {
       <div className="absolute bottom-0 right-0 h-[500px] w-[500px] rounded-full bg-pink-500/10 blur-3xl" />
 
       <div className="relative z-10 mx-auto max-w-7xl">
-        {/* HERO */}
         <motion.div
           initial={{ opacity: 0, y: 35 }}
           animate={{ opacity: 1, y: 0 }}
@@ -83,56 +94,71 @@ export default function GalleryPage() {
           </p>
         </motion.div>
 
-        {/* SECTIONS */}
         <div className="mt-24 flex flex-col gap-28">
-          {sections.map((section, sectionIndex) => (
-            <section key={section.title}>
-              <motion.div
-                initial={{ opacity: 0, y: 35 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.7 }}
-                className="mb-10 max-w-3xl"
-              >
-                <p className="mb-3 text-sm uppercase tracking-[0.3em] text-yellow-500">
-                  {section.subtitle}
-                </p>
+          {sections.map((section) => {
+            const sectionImages = images.filter(
+              (image) => image.category === section.category
+            )
 
-                <h2 className="text-4xl font-black md:text-5xl">
-                  {section.title}
-                </h2>
+            return (
+              <section key={section.category}>
+                <motion.div
+                  initial={{ opacity: 0, y: 35 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.7 }}
+                  className="mb-10 max-w-3xl"
+                >
+                  <p className="mb-3 text-sm uppercase tracking-[0.3em] text-yellow-500">
+                    {section.subtitle}
+                  </p>
 
-                <p className="mt-5 text-lg leading-8 text-white/60">
-                  {section.text}
-                </p>
-              </motion.div>
+                  <h2 className="text-4xl font-black md:text-5xl">
+                    {section.title}
+                  </h2>
 
-              <div className="grid gap-5 md:grid-cols-3">
-                {section.photos.map((photo, index) => (
-                  <motion.div
-                    key={photo}
-                    initial={{ opacity: 0, y: 35 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{
-                      delay: index * 0.08,
-                      duration: 0.7,
-                    }}
-                    onClick={() =>
-                      openGallery(section.photos, index)
-                    }
-                    className="group cursor-pointer overflow-hidden rounded-[2rem]"
-                  >
-                    <img
-                      src={photo}
-                      alt={section.title}
-                      className="h-[420px] w-full object-cover transition duration-700 group-hover:scale-110"
-                    />
-                  </motion.div>
-                ))}
-              </div>
-            </section>
-          ))}
+                  <p className="mt-5 text-lg leading-8 text-white/60">
+                    {section.text}
+                  </p>
+                </motion.div>
+
+                {sectionImages.length === 0 ? (
+                  <p className="text-white/40">
+                    Aucune image publiée pour cette catégorie pour le moment.
+                  </p>
+                ) : (
+                  <div className="grid gap-5 md:grid-cols-3">
+                    {sectionImages.map((image, index) => (
+                      <motion.div
+                        key={image.id}
+                        initial={{ opacity: 0, y: 35 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{
+                          delay: index * 0.08,
+                          duration: 0.7,
+                        }}
+                        onClick={() => openGallery(sectionImages, index)}
+                        className="group cursor-pointer overflow-hidden rounded-[2rem]"
+                      >
+                        <img
+                          src={image.image_url}
+                          alt={image.title || section.title}
+                          className="h-[420px] w-full object-cover transition duration-700 group-hover:scale-110"
+                        />
+
+                        {image.title && (
+                          <p className="mt-4 text-lg font-bold">
+                            {image.title}
+                          </p>
+                        )}
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
+              </section>
+            )
+          })}
         </div>
       </div>
 
