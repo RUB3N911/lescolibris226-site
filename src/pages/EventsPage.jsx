@@ -4,6 +4,14 @@ import { Link } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { supabase } from "../lib/supabase"
 
+const statusLabels = {
+  featured: "À la une",
+  ongoing: "En cours",
+  upcoming: "À venir",
+  past: "Passé",
+  hidden: "Masqué",
+}
+
 export default function EventsPage() {
   const [events, setEvents] = useState([])
 
@@ -24,10 +32,11 @@ export default function EventsPage() {
   }
 
   const featuredEvents = events.filter((event) => event.status === "featured")
+  const ongoingEvents = events.filter((event) => event.status === "ongoing")
   const upcomingEvents = events.filter((event) => event.status === "upcoming")
   const pastEvents = events.filter((event) => event.status === "past")
 
-  const featuredEvent = featuredEvents[0]
+  const featuredEvent = featuredEvents.length > 0 ? featuredEvents[0] : null
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-black px-6 pb-24 pt-32 text-white">
@@ -110,51 +119,55 @@ export default function EventsPage() {
           </section>
         )}
 
-        <section className="mt-28">
-          <p className="mb-4 text-sm uppercase tracking-[0.35em] text-yellow-500">
-            Prochains événements
-          </p>
+        <EventSection
+          title="En cours"
+          subtitle="Les événements actuellement actifs."
+          emptyText="Aucun événement en cours pour le moment."
+          events={ongoingEvents}
+          columns="md:grid-cols-2"
+        />
 
-          <h2 className="text-4xl font-black md:text-5xl">
-            Ce qui arrive bientôt.
-          </h2>
+        <EventSection
+          title="Prochains événements"
+          subtitle="Ce qui arrive bientôt."
+          emptyText="Aucun événement à venir publié pour le moment."
+          events={upcomingEvents}
+          columns="md:grid-cols-2"
+        />
 
-          {upcomingEvents.length === 0 ? (
-            <p className="mt-8 text-white/60">
-              Aucun événement à venir publié pour le moment.
-            </p>
-          ) : (
-            <div className="mt-12 grid gap-6 md:grid-cols-2">
-              {upcomingEvents.map((event, index) => (
-                <EventCard key={event.id} event={event} index={index} />
-              ))}
-            </div>
-          )}
-        </section>
-
-        <section className="mt-28">
-          <p className="mb-4 text-sm uppercase tracking-[0.35em] text-yellow-500">
-            Moments passés
-          </p>
-
-          <h2 className="text-4xl font-black md:text-5xl">
-            Des souvenirs qui continuent de vibrer.
-          </h2>
-
-          {pastEvents.length === 0 ? (
-            <p className="mt-8 text-white/60">
-              Aucun événement passé publié pour le moment.
-            </p>
-          ) : (
-            <div className="mt-12 grid gap-6 md:grid-cols-3">
-              {pastEvents.map((event, index) => (
-                <EventCard key={event.id} event={event} index={index} />
-              ))}
-            </div>
-          )}
-        </section>
+        <EventSection
+          title="Moments passés"
+          subtitle="Des souvenirs qui continuent de vibrer."
+          emptyText="Aucun événement passé publié pour le moment."
+          events={pastEvents}
+          columns="md:grid-cols-3"
+        />
       </div>
     </main>
+  )
+}
+
+function EventSection({ title, subtitle, emptyText, events, columns }) {
+  return (
+    <section className="mt-28">
+      <p className="mb-4 text-sm uppercase tracking-[0.35em] text-yellow-500">
+        {title}
+      </p>
+
+      <h2 className="text-4xl font-black md:text-5xl">
+        {subtitle}
+      </h2>
+
+      {events.length === 0 ? (
+        <p className="mt-8 text-white/60">{emptyText}</p>
+      ) : (
+        <div className={`mt-12 grid gap-6 ${columns}`}>
+          {events.map((event, index) => (
+            <EventCard key={event.id} event={event} index={index} />
+          ))}
+        </div>
+      )}
+    </section>
   )
 }
 
@@ -186,7 +199,13 @@ function EventCard({ event, index }) {
           </p>
         </div>
 
-        <h3 className="mt-4 text-3xl font-black">{event.title}</h3>
+        <p className="mt-4 text-xs uppercase tracking-[0.25em] text-yellow-500/70">
+          {statusLabels[event.status] || event.status}
+        </p>
+
+        <h3 className="mt-3 text-3xl font-black">
+          {event.title}
+        </h3>
 
         {event.location && (
           <div className="mt-4 flex items-center gap-2 text-white/50">

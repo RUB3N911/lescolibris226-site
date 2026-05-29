@@ -6,15 +6,18 @@ export default function AdminEvents() {
   const [message, setMessage] = useState("")
   const [preview, setPreview] = useState(null)
   const [uploading, setUploading] = useState(false)
+  const [editingId, setEditingId] = useState(null)
 
-  const [form, setForm] = useState({
+  const emptyForm = {
     title: "",
     date: "",
     location: "",
     description: "",
     image_url: "",
     status: "upcoming",
-  })
+  }
+
+  const [form, setForm] = useState(emptyForm)
 
   useEffect(() => {
     fetchEvents()
@@ -58,9 +61,7 @@ export default function AdminEvents() {
       return
     }
 
-    const { data } = supabase.storage
-      .from("events")
-      .getPublicUrl(filePath)
+    const { data } = supabase.storage.from("events").getPublicUrl(filePath)
 
     setForm((prev) => ({
       ...prev,
@@ -70,39 +71,98 @@ export default function AdminEvents() {
     setUploading(false)
   }
 
+  const resetForm = () => {
+    setForm(emptyForm)
+    setPreview(null)
+    setEditingId(null)
+    setMessage("")
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setMessage("")
 
-    const { error } = await supabase.from("events").insert([form])
+    if (editingId) {
+      const { error } = await supabase
+        .from("events")
+        .update(form)
+        .eq("id", editingId)
+
+      if (error) {
+        setMessage("Erreur lors de la modification de l’événement.")
+        return
+      }
+
+      setMessage("Événement modifié avec succès.")
+    } else {
+      const { error } = await supabase.from("events").insert([form])
+
+      if (error) {
+        setMessage("Erreur lors de l’ajout de l’événement.")
+        return
+      }
+
+      setMessage("Événement ajouté avec succès.")
+    }
+
+    resetForm()
+    fetchEvents()
+  }
+
+  const startEdit = (event) => {
+    setEditingId(event.id)
+    setForm({
+      title: event.title || "",
+      date: event.date || "",
+      location: event.location || "",
+      description: event.description || "",
+      image_url: event.image_url || "",
+      status: event.status || "upcoming",
+    })
+    setPreview(event.image_url || null)
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }
+
+  const deleteEvent = async (id) => {
+    const confirmDelete = window.confirm("Supprimer cet événement ?")
+
+    if (!confirmDelete) return
+
+    const { error } = await supabase.from("events").delete().eq("id", id)
 
     if (error) {
-      setMessage("Erreur lors de l’ajout de l’événement.")
+      setMessage("Erreur lors de la suppression.")
       return
     }
 
-    setMessage("Événement ajouté avec succès.")
-    setPreview(null)
-
-    setForm({
-      title: "",
-      date: "",
-      location: "",
-      description: "",
-      image_url: "",
-      status: "upcoming",
-    })
-
+    setMessage("Événement supprimé.")
     fetchEvents()
   }
 
   const updateStatus = async (id, status) => {
+    const { data: sessionData } = await supabase.auth.getSession()
+    
+
     const { error } = await supabase
       .from("events")
       .update({ status })
       .eq("id", id)
 
-    if (!error) fetchEvents()
+    if (error) {
+      console.error("UPDATE ERROR:", error)
+      setMessage("Erreur lors du changement de statut.")
+      return
+    }
+
+    fetchEvents()
+  }
+
+  const statusLabels = {
+    featured: "À la une",
+    upcoming: "À venir",
+    ongoing: "En cours",
+    past: "Passé",
+    hidden: "Masqué",
   }
 
   return (
@@ -112,7 +172,9 @@ export default function AdminEvents() {
           Administration
         </p>
 
-        <h1 className="text-5xl font-black">Événements</h1>
+        <h1 className="text-5xl font-black">
+          {editingId ? "Modifier un événement" : "Ajouter un événement"}
+        </h1>
 
         <form
           onSubmit={handleSubmit}
@@ -192,13 +254,25 @@ export default function AdminEvents() {
             className="rounded-2xl border border-white/10 bg-black/40 px-5 py-4 outline-none focus:border-yellow-500"
           />
 
-          <button
-            type="submit"
-            disabled={uploading}
-            className="rounded-full bg-yellow-500 px-8 py-4 font-bold text-black disabled:opacity-50"
-          >
-            Ajouter l’événement
-          </button>
+          <div className="flex flex-col gap-4 sm:flex-row">
+            <button
+              type="submit"
+              disabled={uploading}
+              className="rounded-full bg-yellow-500 px-8 py-4 font-bold text-black disabled:opacity-50"
+            >
+              {editingId ? "Mettre à jour" : "Ajouter l’événement"}
+            </button>
+
+            {editingId && (
+              <button
+                type="button"
+                onClick={resetForm}
+                className="rounded-full border border-white/10 px-8 py-4 font-bold text-white/70"
+              >
+                Annuler
+              </button>
+            )}
+          </div>
 
           {message && <p className="text-white/70">{message}</p>}
         </form>
@@ -213,18 +287,18 @@ export default function AdminEvents() {
                 className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-6"
               >
                 <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-                  <div className="flex gap-5">
+                  <div className="flex flex-col gap-5 sm:flex-row">
                     {event.image_url && (
                       <img
                         src={event.image_url}
                         alt={event.title}
-                        className="h-24 w-32 rounded-xl object-cover"
+                        className="h-28 w-40 rounded-xl object-cover"
                       />
                     )}
 
                     <div>
                       <p className="text-sm uppercase tracking-[0.25em] text-yellow-400">
-                        {event.status}
+                        {statusLabels[event.status] || event.status}
                       </p>
 
                       <h3 className="mt-2 text-2xl font-black">
@@ -237,17 +311,33 @@ export default function AdminEvents() {
                     </div>
                   </div>
 
-                  <select
-                    value={event.status}
-                    onChange={(e) => updateStatus(event.id, e.target.value)}
-                    className="rounded-2xl border border-white/10 bg-black px-5 py-3 outline-none focus:border-yellow-500"
-                  >
-                    <option value="featured">À la une</option>
-                    <option value="upcoming">À venir</option>
-                    <option value="ongoing">En cours</option>
-                    <option value="past">Passé</option>
-                    <option value="hidden">Masqué</option>
-                  </select>
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                    <select
+                      value={event.status}
+                      onChange={(e) => updateStatus(event.id, e.target.value)}
+                      className="rounded-2xl border border-white/10 bg-black px-5 py-3 outline-none focus:border-yellow-500"
+                    >
+                      <option value="featured">À la une</option>
+                      <option value="upcoming">À venir</option>
+                      <option value="ongoing">En cours</option>
+                      <option value="past">Passé</option>
+                      <option value="hidden">Masqué</option>
+                    </select>
+
+                    <button
+                      onClick={() => startEdit(event)}
+                      className="rounded-full border border-yellow-500/30 px-5 py-3 font-bold text-yellow-400"
+                    >
+                      Modifier
+                    </button>
+
+                    <button
+                      onClick={() => deleteEvent(event.id)}
+                      className="rounded-full border border-red-500/30 px-5 py-3 font-bold text-red-400"
+                    >
+                      Supprimer
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
