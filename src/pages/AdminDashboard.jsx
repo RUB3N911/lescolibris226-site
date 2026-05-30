@@ -51,6 +51,17 @@ export default function AdminDashboard() {
               Ajouter, modifier et changer le statut des événements.
             </p>
           </Link>
+
+          <Link
+            to="/admin/partners">
+            className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-8 transition hover:border-yellow-500/40"
+          >
+            <CalendarDays className="text-yellow-500" size={36} />
+            <h2 className="mt-6 text-3xl font-black">Partenaires</h2>
+            <p className="mt-4 text-white/60">
+              Ajouter, modifier les partenaires.
+            </p>
+          </Link>
         </div>
       </div>
     </main>
