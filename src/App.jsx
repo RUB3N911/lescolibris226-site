@@ -30,6 +30,7 @@ import ProtectedAdminRoute from "./components/ProtectedAdminRoute"
 import AdminGallery from "./pages/AdminGallery"
 import AdminEvents from "./pages/AdminEvents"
 import AdminPartners from "./pages/AdminPartners"
+import AdminStory from "./pages/AdminStory"
 
 function AnimatedRoutes() {
   const location = useLocation()
@@ -78,6 +79,14 @@ function AnimatedRoutes() {
   element={
     <ProtectedAdminRoute>
       <AdminPartners />
+    </ProtectedAdminRoute>
+  }
+/>
+          <Route
+  path="/admin/story"
+  element={
+    <ProtectedAdminRoute>
+      <AdminStory />
     </ProtectedAdminRoute>
   }
 />
