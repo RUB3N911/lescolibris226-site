@@ -30,10 +30,10 @@ export default function Navbar() {
   ]
 
   const getLinkClass = (path) =>
-    `text-sm uppercase tracking-[0.2em] transition ${
+    `text-xs font-bold uppercase tracking-[0.24em] transition xl:text-sm ${
       location.pathname === path
         ? "text-yellow-400"
-        : "text-white/70 hover:text-yellow-400"
+        : "text-white/65 hover:text-yellow-400"
     }`
 
   const getMobileLinkClass = (path) =>
@@ -45,25 +45,22 @@ export default function Navbar() {
 
   return (
     <>
-      {/* HEADER */}
       <header
         className={`fixed left-0 top-0 z-50 w-full transition-all duration-500 ${
           scrolled
-            ? "border-b border-white/10 bg-black/70 py-3 shadow-2xl backdrop-blur-2xl"
+            ? "border-b border-white/10 bg-black/75 py-3 shadow-2xl backdrop-blur-2xl"
             : "bg-transparent py-5"
         }`}
       >
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6">
-          {/* LOGO */}
-          <Link to="/" className="relative z-10">
-            <h1 className="whitespace-nowrap text-xl font-black tracking-widest text-white">
+        <div className="mx-auto flex max-w-[1500px] items-center justify-between px-8">
+          <Link to="/" className="relative z-10 shrink-0">
+            <h1 className="whitespace-nowrap text-xl font-black tracking-widest text-white xl:text-2xl">
               LES COLIBRIS{" "}
               <span className="text-yellow-400">226</span>
             </h1>
           </Link>
 
-          {/* DESKTOP NAV */}
-          <nav className="hidden items-center gap-7 md:flex">
+          <nav className="hidden items-center gap-7 lg:flex xl:gap-10">
             {links.map((link) => (
               <Link
                 key={link.label}
@@ -75,27 +72,24 @@ export default function Navbar() {
             ))}
           </nav>
 
-          {/* CTA */}
-          <div className="hidden md:block">
+          <div className="hidden shrink-0 lg:block">
             <Link
               to="/join"
-              className="inline-block rounded-full bg-yellow-500 px-6 py-3 text-sm font-bold text-black transition hover:scale-105"
+              className="inline-block rounded-full bg-yellow-500 px-7 py-3 text-sm font-bold text-black transition hover:scale-105 xl:px-8 xl:py-4"
             >
               Rejoindre
             </Link>
           </div>
 
-          {/* MOBILE BUTTON */}
           <button
             onClick={() => setOpen(!open)}
-            className="relative z-50 text-white md:hidden"
+            className="relative z-50 text-white lg:hidden"
           >
             {open ? <X size={34} /> : <Menu size={34} />}
           </button>
         </div>
       </header>
 
-      {/* MOBILE MENU */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -105,14 +99,13 @@ export default function Navbar() {
             transition={{ duration: 0.4 }}
             className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-8 overflow-hidden bg-black"
           >
-            {/* BACKGROUND LOGO */}
             <img
               src="/images/logo.png"
               alt=""
               aria-hidden="true"
               className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 object-contain opacity-[0.18]"
             />
-            {/* LINKS */}
+
             {links.map((link) => (
               <Link
                 key={link.label}
@@ -124,7 +117,6 @@ export default function Navbar() {
               </Link>
             ))}
 
-            {/* CTA */}
             <Link
               to="/join"
               onClick={() => setOpen(false)}

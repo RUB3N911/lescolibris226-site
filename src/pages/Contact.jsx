@@ -1,5 +1,7 @@
+import { useState } from "react"
 import { motion } from "framer-motion"
 import { whatsappGeneral } from "../lib/links"
+import { supabase } from "../lib/supabase"
 import {
   Mail,
   Phone,
@@ -9,14 +11,67 @@ import {
 } from "lucide-react"
 
 export default function Contact() {
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  })
+
+  const [sending, setSending] = useState(false)
+  const [success, setSuccess] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
+
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    })
+
+    setSuccess(false)
+    setErrorMessage("")
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    setSending(true)
+    setSuccess(false)
+    setErrorMessage("")
+
+    const { error } = await supabase.from("contact_messages").insert([
+      {
+        firstname: form.name,
+        email: form.email,
+        subject: form.subject,
+        message: form.message,
+        status: "new",
+      },
+    ])
+
+    setSending(false)
+
+    if (error) {
+      setErrorMessage("Erreur lors de l’envoi du message.")
+      return
+    }
+
+    setSuccess(true)
+
+    setForm({
+      name: "",
+      email: "",
+      subject: "",
+      message: "",
+    })
+  }
+
   return (
     <main className="relative min-h-screen overflow-hidden bg-black px-6 pb-24 pt-32 text-white">
-      {/* BACKGROUND GLOWS */}
       <div className="absolute left-0 top-20 h-96 w-96 rounded-full bg-yellow-500/10 blur-3xl" />
       <div className="absolute bottom-0 right-0 h-[500px] w-[500px] rounded-full bg-pink-500/10 blur-3xl" />
 
       <div className="relative z-10 mx-auto max-w-7xl">
-        {/* HEADER */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
@@ -37,9 +92,7 @@ export default function Contact() {
           </p>
         </motion.div>
 
-        {/* CONTENT */}
         <div className="mt-20 grid gap-10 lg:grid-cols-2">
-          {/* LEFT SIDE */}
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -93,22 +146,14 @@ export default function Contact() {
             </div>
           </motion.div>
 
-          {/* FORM */}
           <motion.form
-            action="https://formspree.io/f/mojryqbd"
-            method="POST"
+            onSubmit={handleSubmit}
             initial={{ opacity: 0, x: 40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
             className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-10 backdrop-blur-xl"
           >
-            <input
-              type="hidden"
-              name="_subject"
-              value="Nouveau message depuis le site Les Colibris 226"
-            />
-
             <div className="grid gap-6">
               <div>
                 <label className="mb-2 block text-sm uppercase tracking-[0.2em] text-white/40">
@@ -119,6 +164,8 @@ export default function Contact() {
                   type="text"
                   name="name"
                   required
+                  value={form.name}
+                  onChange={handleChange}
                   placeholder="Votre nom"
                   className="w-full rounded-2xl border border-white/10 bg-black/40 px-5 py-4 text-white outline-none transition focus:border-yellow-500"
                 />
@@ -133,6 +180,8 @@ export default function Contact() {
                   type="email"
                   name="email"
                   required
+                  value={form.email}
+                  onChange={handleChange}
                   placeholder="Votre email"
                   className="w-full rounded-2xl border border-white/10 bg-black/40 px-5 py-4 text-white outline-none transition focus:border-yellow-500"
                 />
@@ -147,6 +196,8 @@ export default function Contact() {
                   type="text"
                   name="subject"
                   required
+                  value={form.subject}
+                  onChange={handleChange}
                   placeholder="Sujet"
                   className="w-full rounded-2xl border border-white/10 bg-black/40 px-5 py-4 text-white outline-none transition focus:border-yellow-500"
                 />
@@ -161,6 +212,8 @@ export default function Contact() {
                   name="message"
                   rows="6"
                   required
+                  value={form.message}
+                  onChange={handleChange}
                   placeholder="Votre message..."
                   className="w-full rounded-2xl border border-white/10 bg-black/40 px-5 py-4 text-white outline-none transition focus:border-yellow-500"
                 />
@@ -168,10 +221,23 @@ export default function Contact() {
 
               <button
                 type="submit"
-                className="mt-4 rounded-full bg-yellow-500 px-8 py-4 font-bold text-black transition hover:scale-105"
+                disabled={sending}
+                className="mt-4 rounded-full bg-yellow-500 px-8 py-4 font-bold text-black transition hover:scale-105 disabled:opacity-50"
               >
-                Envoyer le message
+                {sending ? "Envoi..." : "Envoyer le message"}
               </button>
+
+              {success && (
+                <p className="text-green-400">
+                  Votre message a bien été envoyé.
+                </p>
+              )}
+
+              {errorMessage && (
+                <p className="text-red-400">
+                  {errorMessage}
+                </p>
+              )}
             </div>
           </motion.form>
         </div>
