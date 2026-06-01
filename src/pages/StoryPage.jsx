@@ -1,68 +1,36 @@
 import { motion } from "framer-motion"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Lightbox from "../components/Lightbox"
-
-const timeline = [
-  {
-    year: "2000",
-    title: "Naissance de l’idée",
-    text: "Après un état des lieux des possibilités offertes au Morne-Vert, un groupe de jeunes décide de fonder une association culturelle et sportive.",
-    image: "/images/story/2000.webp",
-  },
-  {
-    year: "2001",
-    title: "Déclaration officielle",
-    text: "L’association Les Colibris est déclarée en mai 2001, après avoir vu le jour en septembre 2000.",
-    image: "/images/story/2001.webp",
-  },
-  {
-    year: "2004",
-    title: "Création du groupe à pied",
-    text: "Naissance du groupe à pied avec une première participation aux parades carnavalesques de Martinique.",
-    image: "/images/story/2004.webp",
-  },
-  {
-    year: "2005",
-    title: "Premiers échanges culturels",
-    text: "Les échanges avec d’autres groupes culturels prennent forme, notamment avec Les Hibiscus de Guadeloupe.",
-    image: "/images/story/2005.webp",
-  },
-  {
-    year: "2008 / 2013",
-    title: "La France hexagonale",
-    text: "Les Colibris participent à plusieurs événements et carnavals en France hexagonale.",
-    image: "/images/story/2008-2013.webp",
-  },
-  {
-    year: "2015",
-    title: "Zagreb, Croatie",
-    text: "Les Colibris renforcent les liens culturels à l’international avec la formation croate Na Krilima.",
-    image: "/images/story/2015.webp",
-  },
-  {
-    year: "2020",
-    title: "Résilience & continuité",
-    text: "Maintien de la dynamique malgré les périodes difficiles.",
-    image: "/images/story/2020.webp",
-  },
-  {
-    year: "2024",
-    title: "Dix ans après",
-    text: "Les majorettes croates reviennent accompagner Les Colibris dans plusieurs parades.",
-    image: "/images/story/2024.webp",
-  },
-  {
-    year: "2026",
-    title: "25 ans d’énergie culturelle",
-    text: "Nouvelle identité, modernisation, rayonnement digital.",
-    image: "/images/story/2026.webp",
-  },
-]
+import { supabase } from "../lib/supabase"
 
 export default function StoryPage() {
+  const [timeline, setTimeline] = useState([])
   const [selectedIndex, setSelectedIndex] = useState(null)
 
-  const timelineImages = timeline.map((item) => item.image)
+  useEffect(() => {
+    fetchStory()
+  }, [])
+
+  const fetchStory = async () => {
+    const { data, error } = await supabase
+      .from("story_items")
+      .select("*")
+      .eq("status", "published")
+      .order("display_order", { ascending: true })
+
+    if (!error) {
+      setTimeline(data || [])
+    }
+  }
+
+  const timelineImages = timeline
+    .filter((item) => item.image_url)
+    .map((item) => item.image_url)
+
+  const openLightbox = (imageUrl) => {
+    const index = timelineImages.findIndex((img) => img === imageUrl)
+    setSelectedIndex(index)
+  }
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-black px-6 pb-24 pt-32 text-white">
@@ -95,7 +63,7 @@ export default function StoryPage() {
           <div className="flex flex-col gap-24">
             {timeline.map((item, index) => (
               <motion.div
-                key={item.year}
+                key={item.id}
                 initial={{ opacity: 0, y: 35 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -109,20 +77,24 @@ export default function StoryPage() {
                     {item.year}
                   </p>
 
-                  <h2 className="mt-4 text-4xl font-black">{item.title}</h2>
+                  <h2 className="mt-4 text-4xl font-black">
+                    {item.title}
+                  </h2>
 
                   <p className="mt-6 text-lg leading-8 text-white/65">
-                    {item.text}
+                    {item.description}
                   </p>
                 </div>
 
-                <motion.img
-                  whileHover={{ scale: 1.03 }}
-                  src={item.image}
-                  alt={item.title}
-                  onClick={() => setSelectedIndex(index)}
-                  className="h-[420px] w-full cursor-pointer rounded-[2rem] object-cover transition"
-                />
+                {item.image_url && (
+                  <motion.img
+                    whileHover={{ scale: 1.03 }}
+                    src={item.image_url}
+                    alt={item.title}
+                    onClick={() => openLightbox(item.image_url)}
+                    className="h-[420px] w-full cursor-pointer rounded-[2rem] object-cover transition"
+                  />
+                )}
               </motion.div>
             ))}
           </div>
