@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react"
 import { supabase } from "../lib/supabase"
 
+const inputClass =
+  "rounded-2xl border border-white/10 bg-black/40 px-5 py-4 outline-none focus:border-yellow-500"
+
 export default function AdminPartners() {
   const [partners, setPartners] = useState([])
   const [preview, setPreview] = useState(null)
@@ -28,7 +31,7 @@ export default function AdminPartners() {
     const { data, error } = await supabase
       .from("partners")
       .select("*")
-      .order("display_order")
+      .order("display_order", { ascending: true })
 
     if (!error) setPartners(data || [])
   }
@@ -46,6 +49,7 @@ export default function AdminPartners() {
 
     setUploading(true)
     setPreview(URL.createObjectURL(file))
+    setMessage("")
 
     const ext = file.name.split(".").pop()
     const fileName = `${Date.now()}.${ext}`
@@ -55,7 +59,7 @@ export default function AdminPartners() {
       .upload(fileName, file)
 
     if (error) {
-      setMessage("Erreur upload logo")
+      setMessage("Erreur lors de l’upload du logo.")
       setUploading(false)
       return
     }
@@ -74,20 +78,29 @@ export default function AdminPartners() {
 
   const savePartner = async (e) => {
     e.preventDefault()
+    setMessage("")
 
     if (editingId) {
-      await supabase
+      const { error } = await supabase
         .from("partners")
         .update(form)
         .eq("id", editingId)
 
-      setMessage("Partenaire modifié")
-    } else {
-      await supabase
-        .from("partners")
-        .insert([form])
+      if (error) {
+        setMessage("Erreur lors de la modification.")
+        return
+      }
 
-      setMessage("Partenaire ajouté")
+      setMessage("Partenaire modifié.")
+    } else {
+      const { error } = await supabase.from("partners").insert([form])
+
+      if (error) {
+        setMessage("Erreur lors de l’ajout.")
+        return
+      }
+
+      setMessage("Partenaire ajouté.")
     }
 
     reset()
@@ -96,19 +109,30 @@ export default function AdminPartners() {
 
   const editPartner = (partner) => {
     setEditingId(partner.id)
-    setForm(partner)
-    setPreview(partner.logo_url)
+    setForm({
+      name: partner.name || "",
+      type: partner.type || "",
+      description: partner.description || "",
+      logo_url: partner.logo_url || "",
+      link: partner.link || "",
+      display_order: partner.display_order || 0,
+      status: partner.status || "published",
+    })
+    setPreview(partner.logo_url || null)
     window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
   const deletePartner = async (id) => {
     if (!confirm("Supprimer ce partenaire ?")) return
 
-    await supabase
-      .from("partners")
-      .delete()
-      .eq("id", id)
+    const { error } = await supabase.from("partners").delete().eq("id", id)
 
+    if (error) {
+      setMessage("Erreur lors de la suppression.")
+      return
+    }
+
+    setMessage("Partenaire supprimé.")
     fetchPartners()
   }
 
@@ -121,44 +145,41 @@ export default function AdminPartners() {
   return (
     <main className="min-h-screen bg-black px-6 py-32 text-white">
       <div className="mx-auto max-w-6xl">
-
         <p className="mb-4 text-sm uppercase tracking-[0.35em] text-yellow-500">
           Administration
         </p>
 
         <h1 className="text-5xl font-black">
-          Partenaires
+          {editingId ? "Modifier un partenaire" : "Ajouter un partenaire"}
         </h1>
-
 
         <form
           onSubmit={savePartner}
           className="mt-12 grid gap-5 rounded-[2rem] border border-white/10 bg-white/[0.03] p-8"
         >
-
           <input
             name="name"
             required
             value={form.name}
             onChange={handleChange}
-            placeholder="Nom partenaire"
-            className="rounded-2xl bg-black/40 px-5 py-4"
+            placeholder="Nom du partenaire"
+            className={inputClass}
           />
 
           <input
             name="type"
             value={form.type}
             onChange={handleChange}
-            placeholder="Type (Institution, Sponsor...)"
-            className="rounded-2xl bg-black/40 px-5 py-4"
+            placeholder="Type : Institution, sponsor, association..."
+            className={inputClass}
           />
 
           <input
             name="link"
             value={form.link}
             onChange={handleChange}
-            placeholder="Lien site internet"
-            className="rounded-2xl bg-black/40 px-5 py-4"
+            placeholder="Lien site internet ou réseau social"
+            className={inputClass}
           />
 
           <textarea
@@ -166,121 +187,132 @@ export default function AdminPartners() {
             rows="5"
             value={form.description}
             onChange={handleChange}
-            placeholder="Description"
-            className="rounded-2xl bg-black/40 px-5 py-4"
+            placeholder="Description du partenaire"
+            className={inputClass}
           />
 
+          <div>
+            <input
+              type="number"
+              name="display_order"
+              value={form.display_order}
+              onChange={handleChange}
+              placeholder="Ordre d’affichage"
+              className={inputClass}
+            />
 
-          <input
-            type="number"
-            name="display_order"
-            value={form.display_order}
-            onChange={handleChange}
-            placeholder="Ordre affichage"
-            className="rounded-2xl bg-black/40 px-5 py-4"
-          />
-
+            <p className="mt-2 text-sm text-white/40">
+              Ordre d’affichage : 0 = premier.
+            </p>
+          </div>
 
           <select
             name="status"
             value={form.status}
             onChange={handleChange}
-            className="rounded-2xl bg-black/40 px-5 py-4"
+            className={inputClass}
           >
-            <option value="published">
-              Publié
-            </option>
-
-            <option value="hidden">
-              Masqué
-            </option>
+            <option value="published">Publié</option>
+            <option value="hidden">Masqué</option>
           </select>
 
-
-          <label className="rounded-2xl border border-dashed border-white/20 p-6">
-
-            Logo partenaire
+          <label className="rounded-2xl border border-dashed border-white/20 bg-black/40 p-6">
+            <span className="block text-sm uppercase tracking-[0.25em] text-yellow-500">
+              Logo partenaire
+            </span>
 
             <input
               type="file"
               accept="image/*"
               onChange={uploadLogo}
-              className="mt-4 block"
+              className="mt-4 block w-full text-sm text-white/70"
             />
+
+            {uploading && (
+              <p className="mt-4 text-sm text-yellow-400">
+                Upload en cours...
+              </p>
+            )}
 
             {preview && (
               <img
                 src={preview}
-                className="mt-5 h-32 object-contain"
+                alt="Prévisualisation logo"
+                className="mt-6 h-48 w-full rounded-2xl bg-white p-4 object-contain"
               />
             )}
-
           </label>
 
+          <div className="flex flex-col gap-4 sm:flex-row">
+            <button
+              type="submit"
+              disabled={uploading}
+              className="rounded-full bg-yellow-500 px-8 py-4 font-bold text-black disabled:opacity-50"
+            >
+              {editingId ? "Mettre à jour" : "Ajouter le partenaire"}
+            </button>
 
-          <button
-            disabled={uploading}
-            className="rounded-full bg-yellow-500 px-8 py-4 font-bold text-black"
-          >
-            {editingId
-              ? "Modifier"
-              : "Ajouter"}
-          </button>
+            {editingId && (
+              <button
+                type="button"
+                onClick={reset}
+                className="rounded-full border border-white/10 px-8 py-4 font-bold text-white/70"
+              >
+                Annuler
+              </button>
+            )}
+          </div>
 
-          {message && (
-            <p>{message}</p>
-          )}
-
+          {message && <p className="text-white/70">{message}</p>}
         </form>
 
+        <section className="mt-16">
+          <h2 className="text-3xl font-black">Partenaires existants</h2>
 
-        <div className="mt-16 grid gap-6 md:grid-cols-3">
-
-          {partners.map((partner) => (
-
-            <div
-              key={partner.id}
-              className="rounded-[2rem] border border-white/10 p-6"
-            >
-
-              {partner.logo_url && (
-                <img
-                  src={partner.logo_url}
-                  className="h-28 object-contain"
-                />
-              )}
-
-              <h3 className="mt-5 text-2xl font-black">
-                {partner.name}
-              </h3>
-
-              <p className="text-yellow-400">
-                {partner.status}
-              </p>
-
-
-              <button
-                onClick={() => editPartner(partner)}
-                className="mt-5 mr-3 text-yellow-400"
+          <div className="mt-8 grid gap-5 md:grid-cols-3">
+            {partners.map((partner) => (
+              <div
+                key={partner.id}
+                className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] p-6"
               >
-                Modifier
-              </button>
+                {partner.logo_url && (
+                  <img
+                    src={partner.logo_url}
+                    alt={partner.name}
+                    className="h-32 w-full rounded-2xl bg-white p-4 object-contain"
+                  />
+                )}
 
+                <p className="mt-6 text-sm uppercase tracking-[0.25em] text-yellow-400">
+                  {partner.type || "Partenaire"} — {partner.status}
+                </p>
 
-              <button
-                onClick={() => deletePartner(partner.id)}
-                className="text-red-400"
-              >
-                Supprimer
-              </button>
+                <h3 className="mt-2 text-2xl font-black">{partner.name}</h3>
 
-            </div>
+                <p className="mt-2 text-white/50">
+                  Ordre : {partner.display_order}
+                </p>
 
-          ))}
+                <div className="mt-5 flex gap-3">
+                  <button
+                    onClick={() => editPartner(partner)}
+                    className="rounded-full border border-yellow-500/30 px-5 py-3 font-bold text-yellow-400"
+                  >
+                    Modifier
+                  </button>
 
-        </div>
-
+                  <button
+                    onClick={() => deletePartner(partner.id)}
+                    className="rounded-full border border-red-500/30 px-5 py-3 font-bold text-red-400"
+                  >
+                    Supprimer
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
       </div>
     </main>
   )
-            }
+}

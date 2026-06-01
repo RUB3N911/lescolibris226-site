@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react"
 import { supabase } from "../lib/supabase"
 
+const inputClass =
+  "rounded-2xl border border-white/10 bg-black/40 px-5 py-4 outline-none focus:border-yellow-500"
+
 export default function AdminOrganization() {
   const [members, setMembers] = useState([])
   const [preview, setPreview] = useState(null)
@@ -45,6 +48,7 @@ export default function AdminOrganization() {
 
     setUploading(true)
     setPreview(URL.createObjectURL(file))
+    setMessage("")
 
     const ext = file.name.split(".").pop()
     const fileName = `${Date.now()}.${ext}`
@@ -54,7 +58,7 @@ export default function AdminOrganization() {
       .upload(fileName, file)
 
     if (error) {
-      setMessage("Erreur upload photo.")
+      setMessage("Erreur lors de l’upload de la photo.")
       setUploading(false)
       return
     }
@@ -161,8 +165,8 @@ export default function AdminOrganization() {
             required
             value={form.name}
             onChange={handleChange}
-            placeholder="Nom"
-            className="rounded-2xl bg-black/40 px-5 py-4 outline-none focus:border-yellow-500"
+            placeholder="Nom du membre"
+            className={inputClass}
           />
 
           <input
@@ -170,8 +174,8 @@ export default function AdminOrganization() {
             required
             value={form.role}
             onChange={handleChange}
-            placeholder="Rôle"
-            className="rounded-2xl bg-black/40 px-5 py-4 outline-none focus:border-yellow-500"
+            placeholder="Rôle : Président, trésorier, secrétaire..."
+            className={inputClass}
           />
 
           <textarea
@@ -180,29 +184,35 @@ export default function AdminOrganization() {
             value={form.bio}
             onChange={handleChange}
             placeholder="Bio / description"
-            className="rounded-2xl bg-black/40 px-5 py-4 outline-none focus:border-yellow-500"
+            className={inputClass}
           />
 
-          <input
-            type="number"
-            name="display_order"
-            value={form.display_order}
-            onChange={handleChange}
-            placeholder="Ordre d’affichage"
-            className="rounded-2xl bg-black/40 px-5 py-4 outline-none focus:border-yellow-500"
-          />
+          <div>
+            <input
+              type="number"
+              name="display_order"
+              value={form.display_order}
+              onChange={handleChange}
+              placeholder="Ordre d’affichage"
+              className={inputClass}
+            />
+
+            <p className="mt-2 text-sm text-white/40">
+              Ordre d’affichage : 0 = premier.
+            </p>
+          </div>
 
           <select
             name="status"
             value={form.status}
             onChange={handleChange}
-            className="rounded-2xl bg-black/40 px-5 py-4 outline-none focus:border-yellow-500"
+            className={inputClass}
           >
             <option value="published">Publié</option>
             <option value="hidden">Masqué</option>
           </select>
 
-          <label className="rounded-2xl border border-dashed border-white/20 p-6">
+          <label className="rounded-2xl border border-dashed border-white/20 bg-black/40 p-6">
             <span className="block text-sm uppercase tracking-[0.25em] text-yellow-500">
               Photo
             </span>
@@ -211,7 +221,7 @@ export default function AdminOrganization() {
               type="file"
               accept="image/*"
               onChange={uploadPhoto}
-              className="mt-4 block"
+              className="mt-4 block w-full text-sm text-white/70"
             />
 
             {uploading && (
@@ -224,7 +234,7 @@ export default function AdminOrganization() {
               <img
                 src={preview}
                 alt="Prévisualisation"
-                className="mt-5 h-72 w-full rounded-2xl object-cover"
+                className="mt-6 h-72 w-full rounded-2xl object-cover"
               />
             )}
           </label>
@@ -281,6 +291,12 @@ export default function AdminOrganization() {
                     Ordre : {member.display_order}
                   </p>
 
+                  {member.bio && (
+                    <p className="mt-4 line-clamp-3 text-white/60">
+                      {member.bio}
+                    </p>
+                  )}
+
                   <div className="mt-5 flex gap-3">
                     <button
                       onClick={() => editMember(member)}
@@ -304,4 +320,4 @@ export default function AdminOrganization() {
       </div>
     </main>
   )
-            }
+}

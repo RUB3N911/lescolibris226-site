@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react"
 import { supabase } from "../lib/supabase"
 
+const inputClass =
+  "rounded-2xl border border-white/10 bg-black/40 px-5 py-4 outline-none focus:border-yellow-500"
+
 export default function AdminStory() {
   const [items, setItems] = useState([])
   const [preview, setPreview] = useState(null)
@@ -45,6 +48,7 @@ export default function AdminStory() {
 
     setUploading(true)
     setPreview(URL.createObjectURL(file))
+    setMessage("")
 
     const ext = file.name.split(".").pop()
     const fileName = `${Date.now()}.${ext}`
@@ -155,7 +159,7 @@ export default function AdminStory() {
             value={form.year}
             onChange={handleChange}
             placeholder="Année ou période"
-            className="rounded-2xl bg-black/40 px-5 py-4 outline-none focus:border-yellow-500"
+            className={inputClass}
           />
 
           <input
@@ -164,7 +168,7 @@ export default function AdminStory() {
             value={form.title}
             onChange={handleChange}
             placeholder="Titre"
-            className="rounded-2xl bg-black/40 px-5 py-4 outline-none focus:border-yellow-500"
+            className={inputClass}
           />
 
           <textarea
@@ -173,29 +177,35 @@ export default function AdminStory() {
             value={form.description}
             onChange={handleChange}
             placeholder="Description"
-            className="rounded-2xl bg-black/40 px-5 py-4 outline-none focus:border-yellow-500"
+            className={inputClass}
           />
 
-          <input
-            type="number"
-            name="display_order"
-            value={form.display_order}
-            onChange={handleChange}
-            placeholder="Ordre d’affichage"
-            className="rounded-2xl bg-black/40 px-5 py-4 outline-none focus:border-yellow-500"
-          />
+          <div>
+            <input
+              type="number"
+              name="display_order"
+              value={form.display_order}
+              onChange={handleChange}
+              placeholder="Ordre d’affichage"
+              className={inputClass}
+            />
+
+            <p className="mt-2 text-sm text-white/40">
+              Ordre d’affichage : 0 = premier.
+            </p>
+          </div>
 
           <select
             name="status"
             value={form.status}
             onChange={handleChange}
-            className="rounded-2xl bg-black/40 px-5 py-4 outline-none focus:border-yellow-500"
+            className={inputClass}
           >
             <option value="published">Publié</option>
             <option value="hidden">Masqué</option>
           </select>
 
-          <label className="rounded-2xl border border-dashed border-white/20 p-6">
+          <label className="rounded-2xl border border-dashed border-white/20 bg-black/40 p-6">
             <span className="block text-sm uppercase tracking-[0.25em] text-yellow-500">
               Image
             </span>
@@ -204,18 +214,20 @@ export default function AdminStory() {
               type="file"
               accept="image/*"
               onChange={uploadImage}
-              className="mt-4 block"
+              className="mt-4 block w-full text-sm text-white/70"
             />
 
             {uploading && (
-              <p className="mt-4 text-sm text-yellow-400">Upload en cours...</p>
+              <p className="mt-4 text-sm text-yellow-400">
+                Upload en cours...
+              </p>
             )}
 
             {preview && (
               <img
                 src={preview}
                 alt="Prévisualisation"
-                className="mt-5 h-72 w-full rounded-2xl object-cover"
+                className="mt-6 h-72 w-full rounded-2xl object-cover"
               />
             )}
           </label>
@@ -299,4 +311,4 @@ export default function AdminStory() {
       </div>
     </main>
   )
-      }
+}
