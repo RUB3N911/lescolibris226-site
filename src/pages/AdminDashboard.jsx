@@ -6,6 +6,7 @@ import {
   BookOpen,
   Users,
   ArrowRight,
+  Mail,
 } from "lucide-react"
 
 const cards = [
@@ -38,6 +39,12 @@ const cards = [
     text: "Gérer les membres du bureau et l’équipe associative.",
     to: "/admin/organization",
     icon: Users,
+  },
+  {
+    title: "Messages",  
+    text: "Consulter les demandes reçues depuis le site.",
+    to: "/admin/messages",
+    icon: Mail,
   },
 ]
 

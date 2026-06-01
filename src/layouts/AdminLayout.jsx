@@ -9,6 +9,7 @@ import {
   Users,
   LogOut,
   Menu,
+  Mail,
   X,
 } from "lucide-react"
 import { supabase } from "../lib/supabase"
@@ -20,6 +21,7 @@ const links = [
   { label: "Partenaires", to: "/admin/partners", icon: Handshake },
   { label: "Histoire", to: "/admin/story", icon: BookOpen },
   { label: "Organisation", to: "/admin/organization", icon: Users },
+  { label: "Messages", to: "/admin/messages", icon: Mail },
 ]
 
 export default function AdminLayout() {
