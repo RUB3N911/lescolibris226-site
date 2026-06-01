@@ -32,6 +32,7 @@ import AdminEvents from "./pages/AdminEvents"
 import AdminPartners from "./pages/AdminPartners"
 import AdminStory from "./pages/AdminStory"
 import AdminOrganization from "./pages/AdminOrganization"
+import AdminLayout from "./layouts/AdminLayout"
 
 function AnimatedRoutes() {
   const location = useLocation()
@@ -55,33 +56,35 @@ function AnimatedRoutes() {
           <Route path="/partners" element={<PartnersPage />} />
           <Route path="/become-partner" element={<BecomePartnerPage />} />
           <Route path="/organization" element={<OrganizationPage />} />
+
           <Route path="/admin/login" element={<AdminLogin />} />
+
+          <Route
+            path="/admin"
+            element={
+              <ProtectedAdminRoute>
+                <AdminLayout />
+              </ProtectedAdminRoute>
+            }
+          >
+            <Route index element={<AdminDashboard />} />
+            <Route path="gallery" element={<AdminGallery />} />
+            <Route path="events" element={<AdminEvents />} />
+            <Route path="partners" element={<AdminPartners />} />
+            <Route path="story" element={<AdminStory />} />
+            <Route path="organization" element={<AdminOrganization />} />
+          </Route>
+
           <Route path="*" element={<NotFound />} />
         </Routes>
-
-        <Route
-          path="/admin"
-          element={
-            <ProtectedAdminRoute>
-              <AdminLayout />
-            </ProtectedAdminRoute>
-          }
-        >
-          <Route index element={<AdminDashboard />} />
-          <Route path="gallery" element={<AdminGallery />} />
-          <Route path="events" element={<AdminEvents />} />
-          <Route path="partners" element={<AdminPartners />} />
-          <Route path="story" element={<AdminStory />} />
-          <Route path="organization" element={<AdminOrganization />} />
-        </Route>
-
-
       </motion.div>
     </AnimatePresence>
   )
 }
 
-export default function App() {
+function AppContent() {
+  const location = useLocation()
+  const isAdminPage = location.pathname.startsWith("/admin")
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -93,14 +96,21 @@ export default function App() {
   }, [])
 
   return (
+    <main className="bg-black text-white">
+      <Loader loading={loading} />
+
+      {!isAdminPage && <Navbar />}
+      <ScrollToTop />
+      <AnimatedRoutes />
+      {!isAdminPage && <Footer />}
+    </main>
+  )
+}
+
+export default function App() {
+  return (
     <BrowserRouter>
-      <main className="bg-black text-white">
-        <Loader loading={loading} />
-        <Navbar />
-        <ScrollToTop />
-        <AnimatedRoutes />
-        <Footer />
-      </main>
+      <AppContent />
     </BrowserRouter>
   )
 }
