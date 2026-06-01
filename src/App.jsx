@@ -31,6 +31,7 @@ import AdminGallery from "./pages/AdminGallery"
 import AdminEvents from "./pages/AdminEvents"
 import AdminPartners from "./pages/AdminPartners"
 import AdminStory from "./pages/AdminStory"
+import AdminOrganization from "./pages/AdminOrganization"
 
 function AnimatedRoutes() {
   const location = useLocation()
@@ -87,6 +88,15 @@ function AnimatedRoutes() {
   element={
     <ProtectedAdminRoute>
       <AdminStory />
+    </ProtectedAdminRoute>
+  }
+/>
+
+          <Route
+  path="/admin/organization"
+  element={
+    <ProtectedAdminRoute>
+      <AdminOrganization />
     </ProtectedAdminRoute>
   }
 />
