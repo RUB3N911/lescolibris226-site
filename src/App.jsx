@@ -56,52 +56,26 @@ function AnimatedRoutes() {
           <Route path="/become-partner" element={<BecomePartnerPage />} />
           <Route path="/organization" element={<OrganizationPage />} />
           <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin" element={<ProtectedAdminRoute><AdminDashboard /></ProtectedAdminRoute>}/>
-          <Route
-  path="/admin/gallery"
-  element={
-    <ProtectedAdminRoute>
-      <AdminGallery />
-    </ProtectedAdminRoute>
-  }
-/>
-
-<Route
-  path="/admin/events"
-  element={
-    <ProtectedAdminRoute>
-      <AdminEvents />
-    </ProtectedAdminRoute>
-  }
-/>
-
-          <Route
-  path="/admin/partners"
-  element={
-    <ProtectedAdminRoute>
-      <AdminPartners />
-    </ProtectedAdminRoute>
-  }
-/>
-          <Route
-  path="/admin/story"
-  element={
-    <ProtectedAdminRoute>
-      <AdminStory />
-    </ProtectedAdminRoute>
-  }
-/>
-
-          <Route
-  path="/admin/organization"
-  element={
-    <ProtectedAdminRoute>
-      <AdminOrganization />
-    </ProtectedAdminRoute>
-  }
-/>
           <Route path="*" element={<NotFound />} />
         </Routes>
+
+        <Route
+          path="/admin"
+          element={
+            <ProtectedAdminRoute>
+              <AdminLayout />
+            </ProtectedAdminRoute>
+          }
+        >
+          <Route index element={<AdminDashboard />} />
+          <Route path="gallery" element={<AdminGallery />} />
+          <Route path="events" element={<AdminEvents />} />
+          <Route path="partners" element={<AdminPartners />} />
+          <Route path="story" element={<AdminStory />} />
+          <Route path="organization" element={<AdminOrganization />} />
+        </Route>
+
+
       </motion.div>
     </AnimatePresence>
   )
