@@ -1,42 +1,6 @@
 import { motion } from "framer-motion"
-
-const bureau = [
-  {
-    role: "Président",
-    name: "PELAGE Ruben",
-    image: "/images/organization/president.jpg",
-  },
-  {
-    role: "Vice-Présidente",
-    name: "PAIN Juliana",
-    image: "/images/organization/vice-president.jpg",
-  },
-  {
-    role: "Trésorier",
-    name: "PELAGE Luc",
-    image: "/images/organization/tresorier.jpg",
-  },
-  {
-    role: "Trésorière adjoint",
-    name: "MAUVOIS-GENOT Pascale",
-    image: "/images/organization/tresoriere-adjoint.jpg",
-  },
-  {
-    role: "Secrétaire",
-    name: "PELAGE Floriane",
-    image: "/images/organization/secretaire.jpg",
-  },
-  {
-    role: "Secrétaire adjointe",
-    name: "PAIN MAIZEROI Meling",
-    image: "/images/organization/secretaire-adjointe.jpg",
-  },
-  {
-    role: "Assesseur",
-    name: "PAIN Fabrice",
-    image: "/images/organization/assesseur.jpg",
-  },
-]
+import { useEffect, useState } from "react"
+import { supabase } from "../lib/supabase"
 
 const values = [
   "Transmission",
@@ -47,13 +11,30 @@ const values = [
 ]
 
 export default function OrganizationPage() {
+  const [members, setMembers] = useState([])
+
+  useEffect(() => {
+    fetchMembers()
+  }, [])
+
+  const fetchMembers = async () => {
+    const { data, error } = await supabase
+      .from("organization_members")
+      .select("*")
+      .eq("status", "published")
+      .order("display_order", { ascending: true })
+
+    if (!error) {
+      setMembers(data || [])
+    }
+  }
+
   return (
     <main className="relative min-h-screen overflow-hidden bg-black px-6 pb-24 pt-32 text-white">
       <div className="absolute left-0 top-20 h-96 w-96 rounded-full bg-yellow-500/10 blur-3xl" />
       <div className="absolute bottom-0 right-0 h-[500px] w-[500px] rounded-full bg-pink-500/10 blur-3xl" />
 
       <div className="relative z-10 mx-auto max-w-7xl">
-        {/* HERO */}
         <motion.div
           initial={{ opacity: 0, y: 35 }}
           animate={{ opacity: 1, y: 0 }}
@@ -75,7 +56,6 @@ export default function OrganizationPage() {
           </p>
         </motion.div>
 
-        {/* BUREAU */}
         <section className="mt-24">
           <p className="mb-4 text-sm uppercase tracking-[0.35em] text-yellow-500">
             Le bureau
@@ -85,40 +65,53 @@ export default function OrganizationPage() {
             Les piliers de l’association.
           </h2>
 
-          <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {bureau.map((member, index) => (
-              <motion.div
-                key={member.name}
-                initial={{ opacity: 0, y: 35 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{
-                  delay: index * 0.1,
-                  duration: 0.7,
-                }}
-                className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03]"
-              >
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className="h-[340px] w-full object-cover"
-                />
+          {members.length === 0 ? (
+            <p className="mt-8 text-white/60">
+              Aucun membre publié pour le moment.
+            </p>
+          ) : (
+            <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+              {members.map((member, index) => (
+                <motion.div
+                  key={member.id}
+                  initial={{ opacity: 0, y: 35 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{
+                    delay: index * 0.1,
+                    duration: 0.7,
+                  }}
+                  className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03]"
+                >
+                  {member.photo_url && (
+                    <img
+                      src={member.photo_url}
+                      alt={member.name}
+                      className="h-[340px] w-full object-cover"
+                    />
+                  )}
 
-                <div className="p-6">
-                  <p className="text-sm uppercase tracking-[0.25em] text-yellow-400">
-                    {member.role}
-                  </p>
+                  <div className="p-6">
+                    <p className="text-sm uppercase tracking-[0.25em] text-yellow-400">
+                      {member.role}
+                    </p>
 
-                  <h3 className="mt-3 text-2xl font-black">
-                    {member.name}
-                  </h3>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+                    <h3 className="mt-3 text-2xl font-black">
+                      {member.name}
+                    </h3>
+
+                    {member.bio && (
+                      <p className="mt-4 leading-7 text-white/60">
+                        {member.bio}
+                      </p>
+                    )}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          )}
         </section>
 
-        {/* VALUES */}
         <section className="mt-28">
           <p className="mb-4 text-sm uppercase tracking-[0.35em] text-yellow-500">
             Nos valeurs
