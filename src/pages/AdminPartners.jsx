@@ -19,6 +19,7 @@ export default function AdminPartners() {
     link: "",
     display_order: 0,
     status: "published",
+    show_on_home: false,
   }
 
   const [form, setForm] = useState(emptyForm)
@@ -37,9 +38,11 @@ export default function AdminPartners() {
   }
 
   const handleChange = (e) => {
+    const { name, value, type, checked } = e.target
+
     setForm({
       ...form,
-      [e.target.name]: e.target.value,
+      [name]: type === "checkbox" ? checked : value,
     })
   }
 
@@ -116,6 +119,7 @@ export default function AdminPartners() {
       logo_url: partner.logo_url || "",
       link: partner.link || "",
       display_order: partner.display_order || 0,
+      show_on_home: partner.show_on_home || false,
       status: partner.status || "published",
     })
     setPreview(partner.logo_url || null)
@@ -215,6 +219,20 @@ export default function AdminPartners() {
             <option value="published">Publié</option>
             <option value="hidden">Masqué</option>
           </select>
+
+          <label className="flex items-center gap-4 rounded-2xl border border-white/10 bg-black/40 px-5 py-4">
+            <input
+              type="checkbox"
+              name="show_on_home"
+              checked={form.show_on_home}
+              onChange={handleChange}
+              className="h-5 w-5 accent-yellow-500"
+            />
+
+            <span className="font-bold text-white/80">
+              Afficher sur la page d’accueil
+            </span>
+          </label>
 
           <label className="rounded-2xl border border-dashed border-white/20 bg-black/40 p-6">
             <span className="block text-sm uppercase tracking-[0.25em] text-yellow-500">

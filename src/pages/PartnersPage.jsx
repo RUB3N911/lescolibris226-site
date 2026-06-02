@@ -1,44 +1,14 @@
+import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { Link } from "react-router-dom"
-import { Building2, Handshake, HeartHandshake, ArrowRight, ExternalLink } from "lucide-react"
-
-const currentPartners = [
-  {
-    name: "Mairie du Morne-Vert",
-    type: "Institution",
-    logo: "/images/partners/mairie-morne-vert.png",
-    text: "Partenaire institutionnel engagé dans le rayonnement culturel et associatif du Morne-Vert.",
-    link: "https://www.morne-vert.fr/",
-  },
-  {
-    name: "Domaine Madinina",
-    type: "Sponsor local",
-    logo: "/images/partners/domaine-madinina.png",
-    text: "Resort, bar et restaurant situé au Morne-Vert.",
-    link: "https://www.domaine-madinina.mq/",
-  },
-  {
-    name: "Association S.P.O.R.T Équilibre",
-    type: "Association partenaire",
-    logo: "/images/partners/sport-equilibre.png",
-    text: "Agir par le sport, la santé, l’éducation et la formation pour mieux-être.",
-    link: "https://www.facebook.com/sporteequilibre",
-  },
-  {
-    name: "Collectif des Orchestres de Rue - COR Martinique",
-    type: "Partenaire culturel",
-    logo: "/images/partners/cor-martinique.png",
-    text: "Collectif réunissant les orchestres de rue de Martinique autour du carnaval et de la valorisation culturelle.",
-    link: "https://www.facebook.com/p/Collectif-des-Orchestres-de-Rue-COR-Martinique-100063796052858/",
-  },
-  {
-    name: "MIR",
-    type: "Partenaire mémoriel",
-    logo: "/images/partners/mir.png",
-    text: "Collaboration autour du Konvwa Ba Réparasyon et des actions de transmission mémorielle et culturelle.",
-    link: "https://www.mirmartinique.com/",
-  },
-]
+import {
+  Building2,
+  Handshake,
+  HeartHandshake,
+  ArrowRight,
+  ExternalLink,
+} from "lucide-react"
+import { supabase } from "../lib/supabase"
 
 const partnerTypes = [
   {
@@ -59,6 +29,24 @@ const partnerTypes = [
 ]
 
 export default function PartnersPage() {
+  const [currentPartners, setCurrentPartners] = useState([])
+
+  useEffect(() => {
+    fetchPartners()
+  }, [])
+
+  const fetchPartners = async () => {
+    const { data, error } = await supabase
+      .from("partners")
+      .select("*")
+      .eq("status", "published")
+      .order("display_order", { ascending: true })
+
+    if (!error) {
+      setCurrentPartners(data || [])
+    }
+  }
+
   return (
     <main className="relative min-h-screen overflow-hidden bg-black px-6 pb-24 pt-32 text-white">
       <div className="absolute left-0 top-24 h-96 w-96 rounded-full bg-yellow-500/10 blur-3xl" />
@@ -95,51 +83,61 @@ export default function PartnersPage() {
             Nos partenaires actuels.
           </h2>
 
-          <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {currentPartners.map((partner, index) => (
-              <motion.div
-                key={partner.name}
-                initial={{ opacity: 0, y: 35 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1, duration: 0.7 }}
-                className="flex flex-col rounded-[2rem] border border-white/10 bg-white/[0.03] p-8 backdrop-blur-xl transition hover:-translate-y-1 hover:border-yellow-500/40"
-              >
-                <div className="flex items-center gap-6">
-                  <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white p-4">
-                    <img
-                      src={partner.logo}
-                      alt={partner.name}
-                      className="max-h-full max-w-full object-contain"
-                    />
-                  </div>
-
-                  <div>
-                    <p className="text-sm uppercase tracking-[0.25em] text-yellow-400">
-                      {partner.type}
-                    </p>
-
-                    <h3 className="mt-2 text-2xl font-black">
-                      {partner.name}
-                    </h3>
-                  </div>
-                </div>
-
-                <p className="mt-6 flex-1 leading-7 text-white/60">
-                  {partner.text}
-                </p>
-
-                <a
-                  href={partner.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-8 inline-flex items-center gap-2 text-sm font-bold text-yellow-400 transition hover:gap-4 hover:text-yellow-300"
+          {currentPartners.length === 0 ? (
+            <p className="mt-8 text-white/60">
+              Aucun partenaire publié pour le moment.
+            </p>
+          ) : (
+            <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {currentPartners.map((partner, index) => (
+                <motion.div
+                  key={partner.id}
+                  initial={{ opacity: 0, y: 35 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1, duration: 0.7 }}
+                  className="flex flex-col rounded-[2rem] border border-white/10 bg-white/[0.03] p-8 backdrop-blur-xl transition hover:-translate-y-1 hover:border-yellow-500/40"
                 >
-                  Découvrir le partenaire
-                  <ExternalLink size={16} />
-                </a>
-              </motion.div>
-            ))}
-          </div>
+                  <div className="flex items-center gap-6">
+                    <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white p-4">
+                      {partner.logo_url && (
+                        <img
+                          src={partner.logo_url}
+                          alt={partner.name}
+                          className="max-h-full max-w-full object-contain"
+                        />
+                      )}
+                    </div>
+
+                    <div>
+                      <p className="text-sm uppercase tracking-[0.25em] text-yellow-400">
+                        {partner.type}
+                      </p>
+
+                      <h3 className="mt-2 text-2xl font-black">
+                        {partner.name}
+                      </h3>
+                    </div>
+                  </div>
+
+                  <p className="mt-6 flex-1 leading-7 text-white/60">
+                    {partner.description}
+                  </p>
+
+                  {partner.link && (
+                    <a
+                      href={partner.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-8 inline-flex items-center gap-2 text-sm font-bold text-yellow-400 transition hover:gap-4 hover:text-yellow-300"
+                    >
+                      Découvrir le partenaire
+                      <ExternalLink size={16} />
+                    </a>
+                  )}
+                </motion.div>
+              ))}
+            </div>
+          )}
         </section>
 
         <section className="mt-24">
@@ -179,9 +177,7 @@ export default function PartnersPage() {
 
                 <h3 className="text-2xl font-black">{item.title}</h3>
 
-                <p className="mt-4 leading-7 text-white/60">
-                  {item.text}
-                </p>
+                <p className="mt-4 leading-7 text-white/60">{item.text}</p>
               </motion.div>
             )
           })}
