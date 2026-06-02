@@ -1,7 +1,65 @@
+import { useState } from "react"
 import { motion } from "framer-motion"
 import { Building2, Handshake, Send } from "lucide-react"
+import { supabase } from "../lib/supabase"
 
 export default function BecomePartnerPage() {
+  const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
+  const [errorMessage, setErrorMessage] = useState("")
+
+  const [form, setForm] = useState({
+    organization: "",
+    contact_name: "",
+    email: "",
+    phone: "",
+    type: "",
+    message: "",
+  })
+
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    })
+
+    setSuccess(false)
+    setErrorMessage("")
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    setLoading(true)
+    setSuccess(false)
+    setErrorMessage("")
+
+    const { error } = await supabase.from("partner_requests").insert([
+      {
+        ...form,
+        status: "new",
+      },
+    ])
+
+    setLoading(false)
+
+    if (error) {
+      setErrorMessage("Erreur lors de l’envoi de la demande.")
+      return
+    }
+
+    setSuccess(true)
+
+    setForm({
+      organization: "",
+      contact_name: "",
+      email: "",
+      phone: "",
+      type: "",
+      message: "",
+    })
+  }
+
   return (
     <main className="relative min-h-screen overflow-hidden bg-black px-6 pb-24 pt-32 text-white">
       <div className="absolute left-0 top-24 h-96 w-96 rounded-full bg-yellow-500/10 blur-3xl" />
@@ -50,33 +108,30 @@ export default function BecomePartnerPage() {
         </div>
 
         <motion.form
-          action="https://formspree.io/f/mojryqbd"
-          method="POST"
+          onSubmit={handleSubmit}
           initial={{ opacity: 0, y: 35 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
           className="mt-20 rounded-[2rem] border border-white/10 bg-white/[0.03] p-8 backdrop-blur-xl md:p-10"
         >
-          <input
-            type="hidden"
-            name="_subject"
-            value="Nouvelle proposition de partenariat - Les Colibris 226"
-          />
-
           <div className="grid gap-6 md:grid-cols-2">
             <input
               type="text"
-              name="structure"
+              name="organization"
               required
+              value={form.organization}
+              onChange={handleChange}
               placeholder="Nom de la structure"
               className="rounded-2xl border border-white/10 bg-black/40 px-5 py-4 outline-none focus:border-yellow-500"
             />
 
             <input
               type="text"
-              name="contact"
+              name="contact_name"
               required
+              value={form.contact_name}
+              onChange={handleChange}
               placeholder="Nom du contact"
               className="rounded-2xl border border-white/10 bg-black/40 px-5 py-4 outline-none focus:border-yellow-500"
             />
@@ -85,20 +140,26 @@ export default function BecomePartnerPage() {
               type="email"
               name="email"
               required
+              value={form.email}
+              onChange={handleChange}
               placeholder="Email"
               className="rounded-2xl border border-white/10 bg-black/40 px-5 py-4 outline-none focus:border-yellow-500"
             />
 
             <input
               type="tel"
-              name="telephone"
+              name="phone"
+              value={form.phone}
+              onChange={handleChange}
               placeholder="Téléphone"
               className="rounded-2xl border border-white/10 bg-black/40 px-5 py-4 outline-none focus:border-yellow-500"
             />
 
             <select
-              name="type_partenariat"
+              name="type"
               required
+              value={form.type}
+              onChange={handleChange}
               className="rounded-2xl border border-white/10 bg-black/40 px-5 py-4 outline-none focus:border-yellow-500 md:col-span-2"
             >
               <option value="">Type de partenariat</option>
@@ -114,6 +175,8 @@ export default function BecomePartnerPage() {
               name="message"
               rows="6"
               required
+              value={form.message}
+              onChange={handleChange}
               placeholder="Présentez votre proposition ou votre envie de collaboration..."
               className="rounded-2xl border border-white/10 bg-black/40 px-5 py-4 outline-none focus:border-yellow-500 md:col-span-2"
             />
@@ -121,11 +184,24 @@ export default function BecomePartnerPage() {
 
           <button
             type="submit"
-            className="mt-8 inline-flex items-center gap-3 rounded-full bg-yellow-500 px-8 py-4 font-bold text-black transition hover:scale-105"
+            disabled={loading}
+            className="mt-8 inline-flex items-center gap-3 rounded-full bg-yellow-500 px-8 py-4 font-bold text-black transition hover:scale-105 disabled:opacity-50"
           >
-            Envoyer la proposition
+            {loading ? "Envoi..." : "Envoyer la proposition"}
             <Send size={20} />
           </button>
+
+          {success && (
+            <p className="mt-6 text-green-400">
+              Votre demande de partenariat a bien été envoyée.
+            </p>
+          )}
+
+          {errorMessage && (
+            <p className="mt-6 text-red-400">
+              {errorMessage}
+            </p>
+          )}
         </motion.form>
       </div>
     </main>

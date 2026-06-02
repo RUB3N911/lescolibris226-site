@@ -8,6 +8,7 @@ import {
   Users,
   Mail,
   ArrowRight,
+  FileText,
 } from "lucide-react"
 import { supabase } from "../lib/supabase"
 
@@ -47,6 +48,12 @@ const modules = [
     text: "Consulter les demandes reçues depuis le site.",
     to: "/admin/messages",
     icon: Mail,
+  },
+  {
+    title: "Demandes partenaires",
+    text: "Consulter les propositions de partenariat reçues.",
+    to: "/admin/partner-requests",
+    icon: FileText,
   },
 ]
 
