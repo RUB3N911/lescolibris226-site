@@ -7,13 +7,15 @@ export default function AdminGallery() {
   const [preview, setPreview] = useState(null)
   const [uploading, setUploading] = useState(false)
 
-  const [form, setForm] = useState({
+  const emptyForm = {
     title: "",
     category: "carnaval",
     image_url: "",
     status: "published",
     show_on_home: false,
-  })
+  }
+
+  const [form, setForm] = useState(emptyForm)
 
   useEffect(() => {
     fetchImages()
@@ -29,13 +31,13 @@ export default function AdminGallery() {
   }
 
   const handleChange = (e) => {
-  const { name, value, type, checked } = e.target
+    const { name, value, type, checked } = e.target
 
-  setForm({
-    ...form,
-    [name]: type === "checkbox" ? checked : value,
-  })
-}
+    setForm({
+      ...form,
+      [name]: type === "checkbox" ? checked : value,
+    })
+  }
 
   const handleImageChange = async (e) => {
     const file = e.target.files[0]
@@ -82,14 +84,7 @@ export default function AdminGallery() {
 
     setMessage("Image ajoutée avec succès.")
     setPreview(null)
-
-    setForm({
-      title: "",
-      category: "carnaval",
-      image_url: "",
-      status: "published",
-    })
-
+    setForm(emptyForm)
     fetchImages()
   }
 
@@ -97,6 +92,15 @@ export default function AdminGallery() {
     const { error } = await supabase
       .from("gallery_images")
       .update({ status })
+      .eq("id", id)
+
+    if (!error) fetchImages()
+  }
+
+  const toggleHome = async (id, showOnHome) => {
+    const { error } = await supabase
+      .from("gallery_images")
+      .update({ show_on_home: showOnHome })
       .eq("id", id)
 
     if (!error) fetchImages()
@@ -151,8 +155,12 @@ export default function AdminGallery() {
             <option value="carnaval">Carnaval</option>
             <option value="visages">Les Visages</option>
             <option value="coulisses">Les Coulisses</option>
-            <option value="transmission-culture">Transmission & Culture</option>
-            <option value="partenaires-officiels">Partenaires & moments officiels</option>
+            <option value="transmission-culture">
+              Transmission & Culture
+            </option>
+            <option value="partenaires-officiels">
+              Partenaires & moments officiels
+            </option>
           </select>
 
           <label className="rounded-2xl border border-dashed border-white/20 bg-black/40 p-6">
@@ -193,18 +201,18 @@ export default function AdminGallery() {
           </select>
 
           <label className="flex items-center gap-4 rounded-2xl border border-white/10 bg-black/40 px-5 py-4">
-  <input
-    type="checkbox"
-    name="show_on_home"
-    checked={form.show_on_home}
-    onChange={handleChange}
-    className="h-5 w-5 accent-yellow-500"
-  />
+            <input
+              type="checkbox"
+              name="show_on_home"
+              checked={form.show_on_home}
+              onChange={handleChange}
+              className="h-5 w-5 accent-yellow-500"
+            />
 
-  <span className="font-bold text-white/80">
-    Afficher sur la page d’accueil
-  </span>
-</label>
+            <span className="font-bold text-white/80">
+              Afficher sur la page d’accueil
+            </span>
+          </label>
 
           <button
             type="submit"
@@ -241,6 +249,12 @@ export default function AdminGallery() {
                     {image.title || "Sans titre"}
                   </h3>
 
+                  {image.show_on_home && (
+                    <span className="mt-3 inline-block rounded-full bg-green-500/20 px-3 py-1 text-xs font-bold text-green-400">
+                      Affichée sur l’accueil
+                    </span>
+                  )}
+
                   <select
                     value={image.status}
                     onChange={(e) => updateStatus(image.id, e.target.value)}
@@ -249,6 +263,21 @@ export default function AdminGallery() {
                     <option value="published">Publié</option>
                     <option value="hidden">Masqué</option>
                   </select>
+
+                  <label className="mt-4 flex items-center gap-3 rounded-2xl border border-white/10 bg-black/40 px-4 py-3">
+                    <input
+                      type="checkbox"
+                      checked={!!image.show_on_home}
+                      onChange={(e) =>
+                        toggleHome(image.id, e.target.checked)
+                      }
+                      className="h-5 w-5 accent-yellow-500"
+                    />
+
+                    <span className="text-sm font-bold text-white/70">
+                      Accueil
+                    </span>
+                  </label>
 
                   <button
                     onClick={() => deleteImage(image.id)}
