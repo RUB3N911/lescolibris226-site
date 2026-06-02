@@ -311,6 +311,12 @@ export default function AdminPartners() {
                   Ordre : {partner.display_order}
                 </p>
 
+                {partner.show_on_home && (
+                  <span className="mt-3 inline-block rounded-full bg-green-500/20 px-3 py-1 text-xs font-bold text-green-400">
+                    Affiché sur l’accueil
+                  </span>
+                )}
+
                 <div className="mt-5 flex gap-3">
                   <button
                     onClick={() => editPartner(partner)}
