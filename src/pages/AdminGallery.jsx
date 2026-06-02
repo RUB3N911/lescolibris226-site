@@ -12,6 +12,7 @@ export default function AdminGallery() {
     category: "carnaval",
     image_url: "",
     status: "published",
+    show_on_home: false,
   })
 
   useEffect(() => {
@@ -28,11 +29,13 @@ export default function AdminGallery() {
   }
 
   const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    })
-  }
+  const { name, value, type, checked } = e.target
+
+  setForm({
+    ...form,
+    [name]: type === "checkbox" ? checked : value,
+  })
+}
 
   const handleImageChange = async (e) => {
     const file = e.target.files[0]
@@ -188,6 +191,20 @@ export default function AdminGallery() {
             <option value="published">Publié</option>
             <option value="hidden">Masqué</option>
           </select>
+
+          <label className="flex items-center gap-4 rounded-2xl border border-white/10 bg-black/40 px-5 py-4">
+  <input
+    type="checkbox"
+    name="show_on_home"
+    checked={form.show_on_home}
+    onChange={handleChange}
+    className="h-5 w-5 accent-yellow-500"
+  />
+
+  <span className="font-bold text-white/80">
+    Afficher sur la page d’accueil
+  </span>
+</label>
 
           <button
             type="submit"
