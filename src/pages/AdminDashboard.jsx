@@ -66,6 +66,8 @@ export default function AdminDashboard() {
     organization: 0,
     messages: 0,
     newMessages: 0,
+    partnerRequests: 0,
+newPartnerRequests: 0,
   })
 
   useEffect(() => {
