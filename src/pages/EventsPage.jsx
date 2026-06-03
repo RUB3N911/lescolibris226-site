@@ -4,12 +4,22 @@ import { Link } from "react-router-dom"
 import { useEffect, useState } from "react"
 import { supabase } from "../lib/supabase"
 
-const statusLabels = {
-  featured: "À la une",
-  ongoing: "En cours",
-  upcoming: "À venir",
-  past: "Passé",
-  hidden: "Masqué",
+const getEventStatus = (event) => {
+  if (!event.start_date || !event.end_date) return "upcoming"
+
+  const now = new Date()
+  const start = new Date(event.start_date)
+  const end = new Date(event.end_date)
+
+  if (now < start) return "upcoming"
+  if (now >= start && now <= end) return "ongoing"
+  return "past"
+}
+
+const getStatusLabel = (status) => {
+  if (status === "upcoming") return "À venir"
+  if (status === "ongoing") return "En cours"
+  return "Passé"
 }
 
 export default function EventsPage() {
@@ -24,19 +34,24 @@ export default function EventsPage() {
       .from("events")
       .select("*")
       .eq("is_visible", true)
-      .order("created_at", { ascending: false })
+      .order("start_date", { ascending: true })
 
     if (!error) {
       setEvents(data || [])
     }
   }
 
-  const featuredEvents = events.filter((event) => event.status === "featured")
-  const ongoingEvents = events.filter((event) => event.status === "ongoing")
-  const upcomingEvents = events.filter((event) => event.status === "upcoming")
-  const pastEvents = events.filter((event) => event.status === "past")
+  const ongoingEvents = events.filter(
+    (event) => getEventStatus(event) === "ongoing"
+  )
 
-  const featuredEvent = featuredEvents.length > 0 ? featuredEvents[0] : null
+  const upcomingEvents = events.filter(
+    (event) => getEventStatus(event) === "upcoming"
+  )
+
+  const pastEvents = events.filter(
+    (event) => getEventStatus(event) === "past"
+  )
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-black px-6 pb-24 pt-32 text-white">
@@ -63,61 +78,6 @@ export default function EventsPage() {
             les événements qui font vibrer Les Colibris 226.
           </p>
         </motion.div>
-
-        {featuredEvent && (
-          <section className="mt-24">
-            <p className="mb-4 text-sm uppercase tracking-[0.35em] text-yellow-500">
-              À la une
-            </p>
-
-            <div className="grid gap-10 lg:grid-cols-2">
-              {featuredEvent.image_url && (
-                <motion.img
-                  src={featuredEvent.image_url}
-                  alt={featuredEvent.title}
-                  initial={{ opacity: 0, x: -35 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.8 }}
-                  className="h-full max-h-[620px] w-full rounded-[2rem] object-cover"
-                />
-              )}
-
-              <motion.div
-                initial={{ opacity: 0, x: 35 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8 }}
-                className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-10 backdrop-blur-xl"
-              >
-                <p className="text-sm uppercase tracking-[0.3em] text-yellow-400">
-                  {featuredEvent.date || "Date à venir"}
-                </p>
-
-                <h2 className="mt-4 text-4xl font-black">
-                  {featuredEvent.title}
-                </h2>
-
-                {featuredEvent.location && (
-                  <div className="mt-5 flex items-center gap-3 text-white/50">
-                    <MapPin size={18} />
-                    {featuredEvent.location}
-                  </div>
-                )}
-
-                <p className="mt-8 text-lg leading-8 text-white/65">
-                  {featuredEvent.description}
-                </p>
-
-                <Link
-                  to="/contact"
-                  className="mt-10 inline-flex items-center gap-3 rounded-full bg-yellow-500 px-8 py-4 font-bold text-black transition hover:scale-105"
-                >
-                  Participer à l’événement
-                  <ArrowRight size={20} />
-                </Link>
-              </motion.div>
-            </div>
-          </section>
-        )}
 
         <EventSection
           title="En cours"
@@ -154,9 +114,7 @@ function EventSection({ title, subtitle, emptyText, events, columns }) {
         {title}
       </p>
 
-      <h2 className="text-4xl font-black md:text-5xl">
-        {subtitle}
-      </h2>
+      <h2 className="text-4xl font-black md:text-5xl">{subtitle}</h2>
 
       {events.length === 0 ? (
         <p className="mt-8 text-white/60">{emptyText}</p>
@@ -172,6 +130,8 @@ function EventSection({ title, subtitle, emptyText, events, columns }) {
 }
 
 function EventCard({ event, index }) {
+  const status = getEventStatus(event)
+
   return (
     <motion.article
       initial={{ opacity: 0, y: 35 }}
@@ -200,12 +160,10 @@ function EventCard({ event, index }) {
         </div>
 
         <p className="mt-4 text-xs uppercase tracking-[0.25em] text-yellow-500/70">
-          {statusLabels[event.status] || event.status}
+          {getStatusLabel(status)}
         </p>
 
-        <h3 className="mt-3 text-3xl font-black">
-          {event.title}
-        </h3>
+        <h3 className="mt-3 text-3xl font-black">{event.title}</h3>
 
         {event.location && (
           <div className="mt-4 flex items-center gap-2 text-white/50">
@@ -217,6 +175,16 @@ function EventCard({ event, index }) {
         <p className="mt-6 leading-7 text-white/60">
           {event.description}
         </p>
+
+        {status !== "past" && (
+          <Link
+            to="/contact"
+            className="mt-8 inline-flex items-center gap-2 text-sm font-bold text-yellow-400"
+          >
+            Participer
+            <ArrowRight size={18} />
+          </Link>
+        )}
       </div>
     </motion.article>
   )
