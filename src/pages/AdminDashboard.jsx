@@ -222,4 +222,41 @@ export default function AdminDashboard() {
         <section className="mt-16">
           <h2 className="text-3xl font-black">Modules</h2>
 
-          <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols
+          <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {modules.map((module) => {
+              const Icon = module.icon
+
+              return (
+                <Link
+                  key={module.to}
+                  to={module.to}
+                  className="group rounded-[2rem] border border-white/10 bg-white/[0.03] p-8 transition hover:-translate-y-1 hover:border-yellow-500/40"
+                >
+                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-yellow-500 text-black transition group-hover:scale-110">
+                    <Icon size={30} />
+                  </div>
+
+                  <h2 className="mt-8 text-3xl font-black">
+                    {module.title}
+                  </h2>
+
+                  <p className="mt-4 leading-7 text-white/60">
+                    {module.text}
+                  </p>
+
+                  <div className="mt-8 inline-flex items-center gap-3 font-bold text-yellow-400">
+                    Ouvrir
+                    <ArrowRight
+                      size={18}
+                      className="transition group-hover:translate-x-1"
+                    />
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
+        </section>
+      </div>
+    </main>
+  )
+}
