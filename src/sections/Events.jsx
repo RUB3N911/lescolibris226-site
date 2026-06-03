@@ -15,9 +15,15 @@ export default function Events() {
     const { data, error } = await supabase
       .from("events")
       .select("*")
-      .in("status", ["featured", "ongoing", "upcoming"])
-      .order("created_at", { ascending: false })
-      .limit(3)
+      const now = new Date().toISOString()
+
+const { data, error } = await supabase
+  .from("events")
+  .select("*")
+  .eq("is_visible", true)
+  .gte("end_date", now)
+  .order("start_date", { ascending: true })
+  .limit(3)
 
     if (!error) {
       setEvents(data || [])
