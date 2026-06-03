@@ -21,7 +21,7 @@ const modules = [
   },
   {
     title: "Événements",
-    text: "Créer, modifier et gérer les statuts des événements.",
+    text: "Créer, modifier et gérer les événements.",
     to: "/admin/events",
     icon: CalendarDays,
   },
@@ -67,7 +67,7 @@ export default function AdminDashboard() {
     messages: 0,
     newMessages: 0,
     partnerRequests: 0,
-newPartnerRequests: 0,
+    newPartnerRequests: 0,
   })
 
   useEffect(() => {
@@ -99,6 +99,8 @@ newPartnerRequests: 0,
       organization,
       messages,
       newMessages,
+      partnerRequests,
+      newPartnerRequests,
     ] = await Promise.all([
       getCount("gallery_images"),
       getCount("events"),
@@ -107,6 +109,8 @@ newPartnerRequests: 0,
       getCount("organization_members"),
       getCount("contact_messages"),
       getCount("contact_messages", { column: "status", value: "new" }),
+      getCount("partner_requests"),
+      getCount("partner_requests", { column: "status", value: "new" }),
     ])
 
     setStats({
@@ -117,6 +121,8 @@ newPartnerRequests: 0,
       organization,
       messages,
       newMessages,
+      partnerRequests,
+      newPartnerRequests,
     })
   }
 
@@ -150,6 +156,17 @@ newPartnerRequests: 0,
           ? `${stats.newMessages} nouveau(x)`
           : "Aucun nouveau",
     },
+    {
+      label: "Demandes partenaires",
+      value: stats.partnerRequests,
+      icon: FileText,
+      to: "/admin/partner-requests",
+      highlight: stats.newPartnerRequests > 0,
+      helper:
+        stats.newPartnerRequests > 0
+          ? `${stats.newPartnerRequests} nouvelle(s)`
+          : "Aucune nouvelle",
+    },
   ]
 
   return (
@@ -168,7 +185,7 @@ newPartnerRequests: 0,
           espace sécurisé.
         </p>
 
-        <section className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+        <section className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-5">
           {statCards.map((card) => {
             const Icon = card.icon
 
@@ -187,14 +204,10 @@ newPartnerRequests: 0,
                     <Icon size={26} />
                   </div>
 
-                  <span className="text-4xl font-black">
-                    {card.value}
-                  </span>
+                  <span className="text-4xl font-black">{card.value}</span>
                 </div>
 
-                <h2 className="mt-6 text-xl font-black">
-                  {card.label}
-                </h2>
+                <h2 className="mt-6 text-xl font-black">{card.label}</h2>
 
                 {card.helper && (
                   <p className="mt-2 text-sm text-yellow-400">
@@ -209,41 +222,4 @@ newPartnerRequests: 0,
         <section className="mt-16">
           <h2 className="text-3xl font-black">Modules</h2>
 
-          <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {modules.map((module) => {
-              const Icon = module.icon
-
-              return (
-                <Link
-                  key={module.to}
-                  to={module.to}
-                  className="group rounded-[2rem] border border-white/10 bg-white/[0.03] p-8 transition hover:-translate-y-1 hover:border-yellow-500/40"
-                >
-                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-yellow-500 text-black transition group-hover:scale-110">
-                    <Icon size={30} />
-                  </div>
-
-                  <h2 className="mt-8 text-3xl font-black">
-                    {module.title}
-                  </h2>
-
-                  <p className="mt-4 leading-7 text-white/60">
-                    {module.text}
-                  </p>
-
-                  <div className="mt-8 inline-flex items-center gap-3 font-bold text-yellow-400">
-                    Ouvrir
-                    <ArrowRight
-                      size={18}
-                      className="transition group-hover:translate-x-1"
-                    />
-                  </div>
-                </Link>
-              )
-            })}
-          </div>
-        </section>
-      </div>
-    </main>
-  )
-}
+          <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols
