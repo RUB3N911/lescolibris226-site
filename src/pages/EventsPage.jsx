@@ -23,7 +23,7 @@ export default function EventsPage() {
     const { data, error } = await supabase
       .from("events")
       .select("*")
-      .neq("status", "hidden")
+      .eq("is_visible", true)
       .order("created_at", { ascending: false })
 
     if (!error) {
