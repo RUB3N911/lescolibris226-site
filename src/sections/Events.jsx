@@ -12,9 +12,7 @@ export default function Events() {
   }, [])
 
   const fetchHomeEvents = async () => {
-    const { data, error } = await supabase
-      .from("events")
-      .select("*")
+    
       const now = new Date().toISOString()
 
 const { data, error } = await supabase
