@@ -1,6 +1,41 @@
 import { useEffect, useState } from "react"
 import { supabase } from "../lib/supabase"
 
+const inputClass =
+  "rounded-2xl border border-white/10 bg-black/40 px-5 py-4 outline-none focus:border-yellow-500"
+
+const getAutoStatus = (event) => {
+  if (!event.start_date || !event.end_date) {
+    return {
+      label: "Dates à compléter",
+      className: "text-white/40",
+    }
+  }
+
+  const now = new Date()
+  const start = new Date(event.start_date)
+  const end = new Date(event.end_date)
+
+  if (now < start) {
+    return {
+      label: "À venir",
+      className: "text-cyan-400",
+    }
+  }
+
+  if (now >= start && now <= end) {
+    return {
+      label: "En cours",
+      className: "text-green-400",
+    }
+  }
+
+  return {
+    label: "Passé",
+    className: "text-white/40",
+  }
+}
+
 export default function AdminEvents() {
   const [events, setEvents] = useState([])
   const [message, setMessage] = useState("")
@@ -11,10 +46,12 @@ export default function AdminEvents() {
   const emptyForm = {
     title: "",
     date: "",
+    start_date: "",
+    end_date: "",
     location: "",
     description: "",
     image_url: "",
-    status: "upcoming",
+    is_visible: true,
   }
 
   const [form, setForm] = useState(emptyForm)
@@ -27,15 +64,17 @@ export default function AdminEvents() {
     const { data, error } = await supabase
       .from("events")
       .select("*")
-      .order("created_at", { ascending: false })
+      .order("start_date", { ascending: false })
 
     if (!error) setEvents(data || [])
   }
 
   const handleChange = (e) => {
+    const { name, value, type, checked } = e.target
+
     setForm({
       ...form,
-      [e.target.name]: e.target.value,
+      [name]: type === "checkbox" ? checked : value,
     })
   }
 
@@ -114,10 +153,17 @@ export default function AdminEvents() {
     setForm({
       title: event.title || "",
       date: event.date || "",
+      start_date: event.start_date
+        ? event.start_date.slice(0, 16)
+        : "",
+      end_date: event.end_date
+        ? event.end_date.slice(0, 16)
+        : "",
       location: event.location || "",
       description: event.description || "",
       image_url: event.image_url || "",
-      status: event.status || "upcoming",
+      is_visible:
+        typeof event.is_visible === "boolean" ? event.is_visible : true,
     })
     setPreview(event.image_url || null)
     window.scrollTo({ top: 0, behavior: "smooth" })
@@ -125,7 +171,6 @@ export default function AdminEvents() {
 
   const deleteEvent = async (id) => {
     const confirmDelete = window.confirm("Supprimer cet événement ?")
-
     if (!confirmDelete) return
 
     const { error } = await supabase.from("events").delete().eq("id", id)
@@ -139,30 +184,18 @@ export default function AdminEvents() {
     fetchEvents()
   }
 
-  const updateStatus = async (id, status) => {
-    const { data: sessionData } = await supabase.auth.getSession()
-    
-
+  const toggleVisibility = async (id, isVisible) => {
     const { error } = await supabase
       .from("events")
-      .update({ status })
+      .update({ is_visible: isVisible })
       .eq("id", id)
 
     if (error) {
-      console.error("UPDATE ERROR:", error)
-      setMessage("Erreur lors du changement de statut.")
+      setMessage("Erreur lors du changement de visibilité.")
       return
     }
 
     fetchEvents()
-  }
-
-  const statusLabels = {
-    featured: "À la une",
-    upcoming: "À venir",
-    ongoing: "En cours",
-    past: "Passé",
-    hidden: "Masqué",
   }
 
   return (
@@ -186,23 +219,53 @@ export default function AdminEvents() {
             onChange={handleChange}
             required
             placeholder="Titre de l’événement"
-            className="rounded-2xl border border-white/10 bg-black/40 px-5 py-4 outline-none focus:border-yellow-500"
+            className={inputClass}
           />
 
           <input
             name="date"
             value={form.date}
             onChange={handleChange}
-            placeholder="Date"
-            className="rounded-2xl border border-white/10 bg-black/40 px-5 py-4 outline-none focus:border-yellow-500"
+            placeholder="Date affichée, exemple : 07 Juin 2026"
+            className={inputClass}
           />
+
+          <div className="grid gap-5 md:grid-cols-2">
+            <div>
+              <label className="mb-2 block text-sm uppercase tracking-[0.2em] text-white/40">
+                Début
+              </label>
+
+              <input
+                type="datetime-local"
+                name="start_date"
+                value={form.start_date}
+                onChange={handleChange}
+                className={inputClass}
+              />
+            </div>
+
+            <div>
+              <label className="mb-2 block text-sm uppercase tracking-[0.2em] text-white/40">
+                Fin
+              </label>
+
+              <input
+                type="datetime-local"
+                name="end_date"
+                value={form.end_date}
+                onChange={handleChange}
+                className={inputClass}
+              />
+            </div>
+          </div>
 
           <input
             name="location"
             value={form.location}
             onChange={handleChange}
             placeholder="Lieu"
-            className="rounded-2xl border border-white/10 bg-black/40 px-5 py-4 outline-none focus:border-yellow-500"
+            className={inputClass}
           />
 
           <label className="rounded-2xl border border-dashed border-white/20 bg-black/40 p-6">
@@ -232,18 +295,19 @@ export default function AdminEvents() {
             )}
           </label>
 
-          <select
-            name="status"
-            value={form.status}
-            onChange={handleChange}
-            className="rounded-2xl border border-white/10 bg-black/40 px-5 py-4 outline-none focus:border-yellow-500"
-          >
-            <option value="featured">À la une</option>
-            <option value="upcoming">À venir</option>
-            <option value="ongoing">En cours</option>
-            <option value="past">Passé</option>
-            <option value="hidden">Masqué</option>
-          </select>
+          <label className="flex items-center gap-4 rounded-2xl border border-white/10 bg-black/40 px-5 py-4">
+            <input
+              type="checkbox"
+              name="is_visible"
+              checked={form.is_visible}
+              onChange={handleChange}
+              className="h-5 w-5 accent-yellow-500"
+            />
+
+            <span className="font-bold text-white/80">
+              Publier sur le site
+            </span>
+          </label>
 
           <textarea
             name="description"
@@ -251,7 +315,7 @@ export default function AdminEvents() {
             onChange={handleChange}
             rows="6"
             placeholder="Description"
-            className="rounded-2xl border border-white/10 bg-black/40 px-5 py-4 outline-none focus:border-yellow-500"
+            className={inputClass}
           />
 
           <div className="flex flex-col gap-4 sm:flex-row">
@@ -281,66 +345,81 @@ export default function AdminEvents() {
           <h2 className="text-3xl font-black">Événements existants</h2>
 
           <div className="mt-8 grid gap-5">
-            {events.map((event) => (
-              <div
-                key={event.id}
-                className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-6"
-              >
-                <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-                  <div className="flex flex-col gap-5 sm:flex-row">
-                    {event.image_url && (
-                      <img
-                        src={event.image_url}
-                        alt={event.title}
-                        className="h-28 w-40 rounded-xl object-cover"
-                      />
-                    )}
+            {events.map((event) => {
+              const autoStatus = getAutoStatus(event)
 
-                    <div>
-                      <p className="text-sm uppercase tracking-[0.25em] text-yellow-400">
-                        {statusLabels[event.status] || event.status}
-                      </p>
+              return (
+                <div
+                  key={event.id}
+                  className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-6"
+                >
+                  <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+                    <div className="flex flex-col gap-5 sm:flex-row">
+                      {event.image_url && (
+                        <img
+                          src={event.image_url}
+                          alt={event.title}
+                          className="h-28 w-40 rounded-xl object-cover"
+                        />
+                      )}
 
-                      <h3 className="mt-2 text-2xl font-black">
-                        {event.title}
-                      </h3>
+                      <div>
+                        <p
+                          className={`text-sm uppercase tracking-[0.25em] ${autoStatus.className}`}
+                        >
+                          {autoStatus.label}
+                        </p>
 
-                      <p className="mt-2 text-white/50">
-                        {event.date} — {event.location}
-                      </p>
+                        {!event.is_visible && (
+                          <span className="mt-2 inline-block rounded-full bg-red-500/20 px-3 py-1 text-xs font-bold text-red-400">
+                            Masqué
+                          </span>
+                        )}
+
+                        <h3 className="mt-2 text-2xl font-black">
+                          {event.title}
+                        </h3>
+
+                        <p className="mt-2 text-white/50">
+                          {event.date} — {event.location}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                      <label className="flex items-center gap-3 rounded-2xl border border-white/10 bg-black px-5 py-3">
+                        <input
+                          type="checkbox"
+                          checked={!!event.is_visible}
+                          onChange={(e) =>
+                            toggleVisibility(event.id, e.target.checked)
+                          }
+                          className="h-5 w-5 accent-yellow-500"
+                        />
+
+                        <span className="font-bold text-white/70">
+                          Visible
+                        </span>
+                      </label>
+
+                      <button
+                        onClick={() => startEdit(event)}
+                        className="rounded-full border border-yellow-500/30 px-5 py-3 font-bold text-yellow-400"
+                      >
+                        Modifier
+                      </button>
+
+                      <button
+                        onClick={() => deleteEvent(event.id)}
+                        className="rounded-full border border-red-500/30 px-5 py-3 font-bold text-red-400"
+                      >
+                        Supprimer
+                      </button>
                     </div>
                   </div>
-
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                    <select
-                      value={event.status}
-                      onChange={(e) => updateStatus(event.id, e.target.value)}
-                      className="rounded-2xl border border-white/10 bg-black px-5 py-3 outline-none focus:border-yellow-500"
-                    >
-                      <option value="featured">À la une</option>
-                      <option value="upcoming">À venir</option>
-                      <option value="ongoing">En cours</option>
-                      <option value="past">Passé</option>
-                      <option value="hidden">Masqué</option>
-                    </select>
-
-                    <button
-                      onClick={() => startEdit(event)}
-                      className="rounded-full border border-yellow-500/30 px-5 py-3 font-bold text-yellow-400"
-                    >
-                      Modifier
-                    </button>
-
-                    <button
-                      onClick={() => deleteEvent(event.id)}
-                      className="rounded-full border border-red-500/30 px-5 py-3 font-bold text-red-400"
-                    >
-                      Supprimer
-                    </button>
-                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </section>
       </div>
