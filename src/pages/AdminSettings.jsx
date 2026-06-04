@@ -7,6 +7,7 @@ const inputClass =
 export default function AdminSettings() {
   const [settings, setSettings] = useState(null)
   const [preview, setPreview] = useState(null)
+  const [videoPreview, setVideoPreview] = useState(null)
   const [uploading, setUploading] = useState(false)
   const [message, setMessage] = useState("")
 
@@ -22,8 +23,13 @@ export default function AdminSettings() {
       .single()
 
     if (!error) {
-      setSettings(data)
+      setSettings({
+        ...data,
+        hero_type: data.hero_type || "video",
+      })
+
       setPreview(data.hero_image_url || null)
+      setVideoPreview(data.hero_video_url || null)
     }
   }
 
@@ -43,7 +49,7 @@ export default function AdminSettings() {
     setPreview(URL.createObjectURL(file))
 
     const ext = file.name.split(".").pop()
-    const fileName = `hero-${Date.now()}.${ext}`
+    const fileName = `hero-image-${Date.now()}.${ext}`
 
     const { error } = await supabase.storage
       .from("settings")
@@ -64,6 +70,40 @@ export default function AdminSettings() {
       hero_image_url: data.publicUrl,
     }))
 
+    setPreview(data.publicUrl)
+    setUploading(false)
+  }
+
+  const uploadHeroVideo = async (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+
+    setUploading(true)
+    setMessage("")
+
+    const ext = file.name.split(".").pop()
+    const fileName = `hero-video-${Date.now()}.${ext}`
+
+    const { error } = await supabase.storage
+      .from("settings")
+      .upload(fileName, file)
+
+    if (error) {
+      setMessage("Erreur lors de l’upload de la vidéo.")
+      setUploading(false)
+      return
+    }
+
+    const { data } = supabase.storage
+      .from("settings")
+      .getPublicUrl(fileName)
+
+    setSettings((prev) => ({
+      ...prev,
+      hero_video_url: data.publicUrl,
+    }))
+
+    setVideoPreview(data.publicUrl)
     setUploading(false)
   }
 
@@ -84,7 +124,9 @@ export default function AdminSettings() {
         whatsapp: settings.whatsapp,
         hero_title: settings.hero_title,
         hero_subtitle: settings.hero_subtitle,
+        hero_type: settings.hero_type || "video",
         hero_image_url: settings.hero_image_url,
+        hero_video_url: settings.hero_video_url,
         footer_text: settings.footer_text,
         updated_at: new Date().toISOString(),
       })
@@ -221,32 +263,63 @@ export default function AdminSettings() {
                 className={inputClass}
               />
 
-              <label className="rounded-2xl border border-dashed border-white/20 bg-black/40 p-6">
-                <span className="block text-sm uppercase tracking-[0.25em] text-yellow-500">
-                  Image Hero
-                </span>
+              <select
+                name="hero_type"
+                value={settings.hero_type || "video"}
+                onChange={handleChange}
+                className={inputClass}
+              >
+                <option value="video">Vidéo</option>
+                <option value="image">Image</option>
+              </select>
 
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={uploadHeroImage}
-                  className="mt-4 block w-full text-sm text-white/70"
-                />
+              {settings.hero_type === "image" ? (
+                <label className="rounded-2xl border border-dashed border-white/20 bg-black/40 p-6">
+                  <span className="block text-sm uppercase tracking-[0.25em] text-yellow-500">
+                    Image Hero
+                  </span>
 
-                {uploading && (
-                  <p className="mt-4 text-sm text-yellow-400">
-                    Upload en cours...
-                  </p>
-                )}
-
-                {preview && (
-                  <img
-                    src={preview}
-                    alt="Prévisualisation Hero"
-                    className="mt-6 h-80 w-full rounded-2xl object-cover"
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={uploadHeroImage}
+                    className="mt-4 block w-full text-sm text-white/70"
                   />
-                )}
-              </label>
+
+                  {preview && (
+                    <img
+                      src={preview}
+                      alt="Hero"
+                      className="mt-6 h-80 w-full rounded-2xl object-cover"
+                    />
+                  )}
+                </label>
+              ) : (
+                <label className="rounded-2xl border border-dashed border-white/20 bg-black/40 p-6">
+                  <span className="block text-sm uppercase tracking-[0.25em] text-yellow-500">
+                    Vidéo Hero
+                  </span>
+
+                  <input
+                    type="file"
+                    accept="video/*"
+                    onChange={uploadHeroVideo}
+                    className="mt-4 block w-full text-sm text-white/70"
+                  />
+
+                  {videoPreview && (
+                    <video
+                      src={videoPreview}
+                      controls
+                      className="mt-6 h-80 w-full rounded-2xl object-cover"
+                    />
+                  )}
+                </label>
+              )}
+
+              {uploading && (
+                <p className="text-sm text-yellow-400">Upload en cours...</p>
+              )}
             </div>
           </section>
 

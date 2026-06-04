@@ -1,23 +1,57 @@
+import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { ArrowRight, Play } from "lucide-react"
 import { Link } from "react-router-dom"
+import { supabase } from "../lib/supabase"
 
 export default function Hero() {
+  const [settings, setSettings] = useState(null)
+
+  useEffect(() => {
+    fetchSettings()
+  }, [])
+
+  const fetchSettings = async () => {
+    const { data, error } = await supabase
+      .from("site_settings")
+      .select("*")
+      .eq("id", 1)
+      .single()
+
+    if (!error) setSettings(data)
+  }
+
+  const heroTitle = settings?.hero_title || "LES COLIBRIS 226"
+  const heroSubtitle =
+    settings?.hero_subtitle || "Le battement culturel du Morne-Vert"
+
+  const heroType = settings?.hero_type || "video"
+  const heroImage = settings?.hero_image_url || "/images/gallery/gallery-1.jpg"
+  const heroVideo = settings?.hero_video_url || "/videos/hero-video.mp4"
+
   return (
     <section
       id="accueil"
       className="relative min-h-screen overflow-hidden bg-black"
     >
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        poster="/images/gallery/gallery-1.jpg"
-        className="absolute inset-0 h-full w-full scale-105 object-cover opacity-70"
-      >
-        <source src="/videos/hero-video.mp4" type="video/mp4" />
-      </video>
+      {heroType === "video" ? (
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster={heroImage}
+          className="absolute inset-0 h-full w-full scale-105 object-cover opacity-70"
+        >
+          <source src={heroVideo} type="video/mp4" />
+        </video>
+      ) : (
+        <img
+          src={heroImage}
+          alt={heroTitle}
+          className="absolute inset-0 h-full w-full scale-105 object-cover opacity-70"
+        />
+      )}
 
       <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-black/20" />
       <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/40" />
@@ -37,14 +71,11 @@ export default function Hero() {
           </p>
 
           <h1 className="text-5xl font-black leading-none text-white sm:text-6xl md:text-8xl">
-            LES COLIBRIS{" "}
-            <span className="bg-gradient-to-r from-cyan-400 via-pink-500 to-yellow-400 bg-clip-text text-transparent">
-              226
-            </span>
+            {heroTitle}
           </h1>
 
           <p className="mt-6 max-w-3xl text-xl italic text-white/80 sm:text-2xl md:text-4xl">
-            Le battement culturel du Morne-Vert
+            {heroSubtitle}
           </p>
 
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
