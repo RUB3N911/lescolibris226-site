@@ -18,42 +18,56 @@ const modules = [
     text: "Ajouter, masquer ou supprimer les images du site.",
     to: "/admin/gallery",
     icon: Image,
+    color: "bg-blue-500",
+    border: "hover:border-blue-500/40",
   },
   {
     title: "Événements",
     text: "Créer, modifier et gérer les événements.",
     to: "/admin/events",
     icon: CalendarDays,
+    color: "bg-violet-500",
+    border: "hover:border-violet-500/40",
   },
   {
     title: "Partenaires",
     text: "Ajouter les sponsors, institutions et partenaires culturels.",
     to: "/admin/partners",
     icon: Handshake,
+    color: "bg-green-500",
+    border: "hover:border-green-500/40",
   },
   {
     title: "Histoire",
     text: "Mettre à jour la timeline et les moments clés.",
     to: "/admin/story",
     icon: BookOpen,
+    color: "bg-pink-500",
+    border: "hover:border-pink-500/40",
   },
   {
     title: "Organisation",
     text: "Gérer les membres du bureau et l’équipe associative.",
     to: "/admin/organization",
     icon: Users,
+    color: "bg-indigo-500",
+    border: "hover:border-indigo-500/40",
   },
   {
     title: "Messages",
     text: "Consulter les demandes reçues depuis le site.",
     to: "/admin/messages",
     icon: Mail,
+    color: "bg-orange-500",
+    border: "hover:border-orange-500/40",
   },
   {
     title: "Demandes partenaires",
     text: "Consulter les propositions de partenariat reçues.",
     to: "/admin/partner-requests",
     icon: FileText,
+    color: "bg-cyan-500",
+    border: "hover:border-cyan-500/40",
   },
 ]
 
@@ -132,24 +146,32 @@ export default function AdminDashboard() {
       value: stats.gallery,
       icon: Image,
       to: "/admin/gallery",
+      color: "bg-blue-500",
+      border: "hover:border-blue-500/40",
     },
     {
       label: "Événements",
       value: stats.events,
       icon: CalendarDays,
       to: "/admin/events",
+      color: "bg-violet-500",
+      border: "hover:border-violet-500/40",
     },
     {
       label: "Partenaires",
       value: stats.partners,
       icon: Handshake,
       to: "/admin/partners",
+      color: "bg-green-500",
+      border: "hover:border-green-500/40",
     },
     {
       label: "Messages",
       value: stats.messages,
       icon: Mail,
       to: "/admin/messages",
+      color: "bg-orange-500",
+      border: "hover:border-orange-500/40",
       highlight: stats.newMessages > 0,
       helper:
         stats.newMessages > 0
@@ -161,6 +183,8 @@ export default function AdminDashboard() {
       value: stats.partnerRequests,
       icon: FileText,
       to: "/admin/partner-requests",
+      color: "bg-cyan-500",
+      border: "hover:border-cyan-500/40",
       highlight: stats.newPartnerRequests > 0,
       helper:
         stats.newPartnerRequests > 0
@@ -195,12 +219,14 @@ export default function AdminDashboard() {
                 to={card.to}
                 className={`rounded-[2rem] border p-6 transition hover:-translate-y-1 ${
                   card.highlight
-                    ? "border-yellow-500/40 bg-yellow-500/10"
-                    : "border-white/10 bg-white/[0.03] hover:border-yellow-500/30"
+                    ? `${card.border.replace("hover:", "")} bg-white/[0.06]`
+                    : `border-white/10 bg-white/[0.03] ${card.border}`
                 }`}
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-yellow-500 text-black">
+                  <div
+                    className={`flex h-14 w-14 items-center justify-center rounded-2xl ${card.color} text-black`}
+                  >
                     <Icon size={26} />
                   </div>
 
@@ -210,7 +236,11 @@ export default function AdminDashboard() {
                 <h2 className="mt-6 text-xl font-black">{card.label}</h2>
 
                 {card.helper && (
-                  <p className="mt-2 text-sm text-yellow-400">
+                  <p
+                    className={`mt-2 text-sm ${
+                      card.highlight ? "text-yellow-400" : "text-white/40"
+                    }`}
+                  >
                     {card.helper}
                   </p>
                 )}
@@ -230,9 +260,11 @@ export default function AdminDashboard() {
                 <Link
                   key={module.to}
                   to={module.to}
-                  className="group rounded-[2rem] border border-white/10 bg-white/[0.03] p-8 transition hover:-translate-y-1 hover:border-yellow-500/40"
+                  className={`group rounded-[2rem] border border-white/10 bg-white/[0.03] p-8 transition hover:-translate-y-1 ${module.border}`}
                 >
-                  <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-yellow-500 text-black transition group-hover:scale-110">
+                  <div
+                    className={`flex h-16 w-16 items-center justify-center rounded-2xl ${module.color} text-black transition group-hover:scale-110`}
+                  >
                     <Icon size={30} />
                   </div>
 
