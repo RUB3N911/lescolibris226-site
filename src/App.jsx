@@ -35,6 +35,7 @@ import AdminOrganization from "./pages/AdminOrganization"
 import AdminLayout from "./layouts/AdminLayout"
 import AdminMessages from "./pages/AdminMessages"
 import AdminPartnerRequests from "./pages/AdminPartnerRequests"
+import AdminSettings from "./pages/AdminSettings"
 
 function AnimatedRoutes() {
   const location = useLocation()
@@ -77,6 +78,7 @@ function AnimatedRoutes() {
             <Route path="organization" element={<AdminOrganization />} />
             <Route path="messages" element={<AdminMessages />} />
             <Route path="partner-requests" element={<AdminPartnerRequests />} />
+            <Route path="settings" element={<AdminSettings />} />
           </Route>
 
           <Route path="*" element={<NotFound />} />

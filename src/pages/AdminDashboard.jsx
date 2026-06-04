@@ -9,6 +9,7 @@ import {
   Mail,
   ArrowRight,
   FileText,
+  Settings,
 } from "lucide-react"
 import { supabase } from "../lib/supabase"
 
@@ -68,6 +69,14 @@ const modules = [
     icon: FileText,
     color: "bg-cyan-500",
     border: "hover:border-cyan-500/40",
+  },
+  {
+    title: "Paramètres",
+    text: "Modifier les coordonnées, réseaux sociaux et contenus principaux.",
+    to: "/admin/settings",
+    icon: Settings,
+    color: "bg-yellow-500",
+    border: "hover:border-yellow-500/40",
   },
 ]
 
