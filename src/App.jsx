@@ -37,6 +37,8 @@ import AdminMessages from "./pages/AdminMessages"
 import AdminPartnerRequests from "./pages/AdminPartnerRequests"
 import AdminSettings from "./pages/AdminSettings"
 
+import AnalyticsTracker from "./components/AnalyticsTracker"
+
 function AnimatedRoutes() {
   const location = useLocation()
 
@@ -116,6 +118,7 @@ function AppContent() {
 export default function App() {
   return (
     <BrowserRouter>
+      <AnalyticsTracker />
       <AppContent />
     </BrowserRouter>
   )
