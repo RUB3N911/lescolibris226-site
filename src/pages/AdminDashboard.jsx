@@ -10,6 +10,7 @@ import {
   ArrowRight,
   FileText,
   Settings,
+  Eye,
 } from "lucide-react"
 import { supabase } from "../lib/supabase"
 
@@ -91,6 +92,7 @@ export default function AdminDashboard() {
     newMessages: 0,
     partnerRequests: 0,
     newPartnerRequests: 0,
+    visits: 0,
   })
 
   useEffect(() => {
@@ -124,6 +126,7 @@ export default function AdminDashboard() {
       newMessages,
       partnerRequests,
       newPartnerRequests,
+      visits,
     ] = await Promise.all([
       getCount("gallery_images"),
       getCount("events"),
@@ -134,6 +137,7 @@ export default function AdminDashboard() {
       getCount("contact_messages", { column: "status", value: "new" }),
       getCount("partner_requests"),
       getCount("partner_requests", { column: "status", value: "new" }),
+      getCount("site_visits"),
     ])
 
     setStats({
@@ -146,6 +150,7 @@ export default function AdminDashboard() {
       newMessages,
       partnerRequests,
       newPartnerRequests,
+      visits,
     })
   }
 
@@ -200,6 +205,14 @@ export default function AdminDashboard() {
           ? `${stats.newPartnerRequests} nouvelle(s)`
           : "Aucune nouvelle",
     },
+    {
+  label: "Visites",
+  value: stats.visits,
+  icon: Eye,
+  to: "#",
+  color: "bg-purple-500",
+  border: "hover:border-purple-500/40",
+},
   ]
 
   return (
