@@ -11,6 +11,7 @@ import {
   FileText,
   Settings,
   Eye,
+  TrendingUp,
 } from "lucide-react"
 import { supabase } from "../lib/supabase"
 
@@ -93,6 +94,7 @@ export default function AdminDashboard() {
     partnerRequests: 0,
     newPartnerRequests: 0,
     visits: 0,
+    visitsMonth: 0,
   })
 
   useEffect(() => {
@@ -115,7 +117,22 @@ export default function AdminDashboard() {
     return count || 0
   }
 
+  const getCountSince = async (table, column, value) => {
+    const { count, error } = await supabase
+      .from(table)
+      .select("*", { count: "exact", head: true })
+      .gte(column, value)
+
+    if (error) return 0
+
+    return count || 0
+  }
+
   const fetchStats = async () => {
+    const startOfMonth = new Date()
+    startOfMonth.setDate(1)
+    startOfMonth.setHours(0, 0, 0, 0)
+
     const [
       gallery,
       events,
@@ -127,6 +144,7 @@ export default function AdminDashboard() {
       partnerRequests,
       newPartnerRequests,
       visits,
+      visitsMonth,
     ] = await Promise.all([
       getCount("gallery_images"),
       getCount("events"),
@@ -138,6 +156,7 @@ export default function AdminDashboard() {
       getCount("partner_requests"),
       getCount("partner_requests", { column: "status", value: "new" }),
       getCount("site_visits"),
+      getCountSince("site_visits", "created_at", startOfMonth.toISOString()),
     ])
 
     setStats({
@@ -151,6 +170,7 @@ export default function AdminDashboard() {
       partnerRequests,
       newPartnerRequests,
       visits,
+      visitsMonth,
     })
   }
 
@@ -206,13 +226,21 @@ export default function AdminDashboard() {
           : "Aucune nouvelle",
     },
     {
-  label: "Visites",
-  value: stats.visits,
-  icon: Eye,
-  to: "#",
-  color: "bg-purple-500",
-  border: "hover:border-purple-500/40",
-},
+      label: "Visites",
+      value: stats.visits,
+      icon: Eye,
+      to: "/admin",
+      color: "bg-purple-500",
+      border: "hover:border-purple-500/40",
+    },
+    {
+      label: "Ce mois",
+      value: stats.visitsMonth,
+      icon: TrendingUp,
+      to: "/admin",
+      color: "bg-fuchsia-500",
+      border: "hover:border-fuchsia-500/40",
+    },
   ]
 
   return (
@@ -231,7 +259,7 @@ export default function AdminDashboard() {
           espace sécurisé.
         </p>
 
-        <section className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-5">
+        <section className="mt-12 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
           {statCards.map((card) => {
             const Icon = card.icon
 
