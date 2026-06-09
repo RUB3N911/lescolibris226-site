@@ -12,6 +12,7 @@ import {
   Settings,
   Eye,
   TrendingUp,
+  BarChart3,
 } from "lucide-react"
 import { supabase } from "../lib/supabase"
 
@@ -72,6 +73,14 @@ const modules = [
     color: "bg-cyan-500",
     border: "hover:border-cyan-500/40",
   },
+  {
+  title: "Analytics",
+  text: "Suivre les visites et les pages les plus consultées.",
+  to: "/admin/analytics",
+  icon: BarChart3,
+  color: "bg-purple-500",
+  border: "hover:border-purple-500/40",
+},
   {
     title: "Paramètres",
     text: "Modifier les coordonnées, réseaux sociaux et contenus principaux.",
