@@ -2,6 +2,22 @@ import { useEffect, useState } from "react"
 import { Eye, TrendingUp, FileText, Clock } from "lucide-react"
 import { supabase } from "../lib/supabase"
 
+const formatPageName = (page) => {
+  const names = {
+    "/": "Accueil",
+    "/story": "Histoire",
+    "/events": "Événements",
+    "/gallery": "Galerie",
+    "/partners": "Partenaires",
+    "/organization": "Organisation",
+    "/contact": "Contact",
+    "/join": "Rejoindre",
+    "/become-partner": "Devenir partenaire",
+  }
+
+  return names[page] || page
+}
+
 export default function AdminAnalytics() {
   const [stats, setStats] = useState({
     totalVisits: 0,
@@ -110,7 +126,7 @@ export default function AdminAnalytics() {
                     className="flex items-center justify-between rounded-2xl border border-white/10 bg-black/40 px-5 py-4"
                   >
                     <span className="font-bold text-white/80">
-                      {item.page}
+                      {formatPageName(item.page)}
                     </span>
 
                     <span className="rounded-full bg-yellow-500 px-3 py-1 text-sm font-black text-black">
@@ -146,7 +162,7 @@ export default function AdminAnalytics() {
                     className="rounded-2xl border border-white/10 bg-black/40 px-5 py-4"
                   >
                     <p className="font-bold text-white/80">
-                      {visit.page || "/"}
+                      {formatPageName(visit.page || "/")}
                     </p>
 
                     <p className="mt-1 text-sm text-white/40">
@@ -179,4 +195,4 @@ function StatCard({ icon: Icon, label, value, color }) {
       <h2 className="mt-8 text-2xl font-black">{label}</h2>
     </div>
   )
-      }
+}
