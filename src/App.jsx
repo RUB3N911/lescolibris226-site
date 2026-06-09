@@ -38,6 +38,7 @@ import AdminPartnerRequests from "./pages/AdminPartnerRequests"
 import AdminSettings from "./pages/AdminSettings"
 
 import AnalyticsTracker from "./components/AnalyticsTracker"
+import AdminAnalytics from "./pages/AdminAnalytics"
 
 function AnimatedRoutes() {
   const location = useLocation()
@@ -81,6 +82,7 @@ function AnimatedRoutes() {
             <Route path="messages" element={<AdminMessages />} />
             <Route path="partner-requests" element={<AdminPartnerRequests />} />
             <Route path="settings" element={<AdminSettings />} />
+            <Route path="analytics" element={<AdminAnalytics />} />
           </Route>
 
           <Route path="*" element={<NotFound />} />
