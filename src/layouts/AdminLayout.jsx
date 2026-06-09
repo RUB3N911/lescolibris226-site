@@ -12,6 +12,7 @@ import {
   Mail,
   FileText,
   Settings,
+  BarChart3,
   X,
 } from "lucide-react"
 import { supabase } from "../lib/supabase"
@@ -25,6 +26,11 @@ const links = [
   { label: "Organisation", to: "/admin/organization", icon: Users },
   { label: "Messages", to: "/admin/messages", icon: Mail },
   {label: "Demandes partenaires", to: "/admin/partner-requests", icon: FileText,},
+  {
+  label: "Analytics",
+  to: "/admin/analytics",
+  icon: BarChart3,
+},
   {label: "Paramètres", to: "/admin/settings", icon: Settings,},
 ]
 
