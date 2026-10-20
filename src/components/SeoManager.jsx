@@ -29,6 +29,8 @@ const pages = {
     title: "Nos partenaires | Les Colibris 226",
     description: "Découvrez les partenaires qui accompagnent Les Colibris 226 et soutiennent la culture, la jeunesse et les traditions du Morne-Vert.",
   },
+  "/legal": { title: "Mentions légales | Les Colibris 226", description: "Informations légales du site Les Colibris 226." },
+  "/privacy": { title: "Politique de confidentialité | Les Colibris 226", description: "Informations sur le traitement des données personnelles par Les Colibris 226." },
   "/contact": {
     title: "Contacter Les Colibris 226 | Morne-Vert, Martinique",
     description: "Contactez Les Colibris 226 pour une question, un projet culturel, une prestation ou une collaboration en Martinique.",
