@@ -161,7 +161,10 @@ export default function Footer() {
 
       <div className="relative z-10 mx-auto mt-14 flex max-w-7xl flex-col gap-3 border-t border-white/10 pt-8 text-sm text-white/40 md:flex-row md:items-center md:justify-between">
         <p>© 2026 {associationName}. Tous droits réservés.</p>
-        <p>{footerText}</p>
+        <div className="flex flex-wrap gap-x-5 gap-y-2">
+          <Link to="/legal" className="hover:text-yellow-400">Mentions légales</Link>
+          <Link to="/privacy" className="hover:text-yellow-400">Politique de confidentialité</Link>
+        </div>
       </div>
     </footer>
   )
