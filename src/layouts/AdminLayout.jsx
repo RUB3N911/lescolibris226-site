@@ -32,7 +32,7 @@ const links = [
   icon: BarChart3,
 },
   {label: "Paramètres", to: "/admin/settings", icon: Settings,},
-  {label: "Pages juridiques", to: "/admin/legal", icon: FileText,},
+  {label: "Pages juridiques", to: "/admin/pages-juridiques", icon: FileText,},
 ]
 
 export default function AdminLayout() {
