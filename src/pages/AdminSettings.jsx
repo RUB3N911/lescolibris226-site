@@ -128,6 +128,17 @@ export default function AdminSettings() {
         hero_image_url: settings.hero_image_url,
         hero_video_url: settings.hero_video_url,
         footer_text: settings.footer_text,
+        legal_association_name: settings.legal_association_name || null,
+        rna: settings.rna || null,
+        registered_address: settings.registered_address || null,
+        publication_director: settings.publication_director || null,
+        host_name: settings.host_name || null,
+        host_address: settings.host_address || null,
+        host_website: settings.host_website || null,
+        retention_period: settings.retention_period || null,
+        privacy_contact: settings.privacy_contact || null,
+        analytics_provider: settings.analytics_provider || null,
+        cookie_policy: settings.cookie_policy || null,
         updated_at: new Date().toISOString(),
       })
       .eq("id", 1)
@@ -204,6 +215,45 @@ export default function AdminSettings() {
             </div>
           </section>
 
+          <section className="rounded-2xl border border-yellow-500/20 bg-yellow-500/[0.04] p-6">
+            <h2 className="text-2xl font-black">Informations légales et confidentialité</h2>
+            <p className="mt-3 text-sm leading-6 text-white/60">Ces informations sont réutilisées automatiquement dans les mentions légales et la politique de confidentialité. Renseignez uniquement des données vérifiées.</p>
+            <div className="mt-6 grid gap-5 md:grid-cols-2">
+              <label className="flex flex-col gap-2 text-sm text-white/80">Dénomination officielle de l'association
+                <input name="legal_association_name" value={settings.legal_association_name || ""} onChange={handleChange} placeholder="Dénomination officielle de l'association" className={inputClass} />
+              </label>
+              <label className="flex flex-col gap-2 text-sm text-white/80">Numéro RNA (ex. W9M...)
+                <input name="rna" value={settings.rna || ""} onChange={handleChange} placeholder="Numéro RNA (ex. W9M...)" className={inputClass} />
+              </label>
+              <label className="flex flex-col gap-2 text-sm text-white/80">Adresse complète du siège social
+                <input name="registered_address" value={settings.registered_address || ""} onChange={handleChange} placeholder="Adresse complète du siège social" className={inputClass} />
+              </label>
+              <label className="flex flex-col gap-2 text-sm text-white/80">Direction de la publication
+                <input name="publication_director" value={settings.publication_director || ""} onChange={handleChange} placeholder="Direction de la publication" className={inputClass} />
+              </label>
+              <label className="flex flex-col gap-2 text-sm text-white/80">Nom de l'hébergeur
+                <input name="host_name" value={settings.host_name || ""} onChange={handleChange} placeholder="Nom de l'hébergeur" className={inputClass} />
+              </label>
+              <label className="flex flex-col gap-2 text-sm text-white/80">Adresse de l'hébergeur
+                <input name="host_address" value={settings.host_address || ""} onChange={handleChange} placeholder="Adresse de l'hébergeur" className={inputClass} />
+              </label>
+              <label className="flex flex-col gap-2 text-sm text-white/80">Site web de l'hébergeur
+                <input name="host_website" value={settings.host_website || ""} onChange={handleChange} placeholder="Site web de l'hébergeur" className={inputClass} />
+              </label>
+              <label className="flex flex-col gap-2 text-sm text-white/80">Durée de conservation des demandes
+                <input name="retention_period" value={settings.retention_period || ""} onChange={handleChange} placeholder="Durée de conservation des demandes" className={inputClass} />
+              </label>
+              <label className="flex flex-col gap-2 text-sm text-white/80">Email dédié à la protection des données
+                <input name="privacy_contact" value={settings.privacy_contact || ""} onChange={handleChange} placeholder="Email dédié à la protection des données" className={inputClass} />
+              </label>
+              <label className="flex flex-col gap-2 text-sm text-white/80">Outil de mesure d'audience
+                <input name="analytics_provider" value={settings.analytics_provider || ""} onChange={handleChange} placeholder="Outil de mesure d'audience" className={inputClass} />
+              </label>
+              <label className="flex flex-col gap-2 text-sm text-white/80">Informations sur les cookies et le consentement
+                <input name="cookie_policy" value={settings.cookie_policy || ""} onChange={handleChange} placeholder="Informations sur les cookies et le consentement" className={inputClass} />
+              </label>
+            </div>
+          </section>
           <section>
             <h2 className="text-2xl font-black">Réseaux sociaux</h2>
 
