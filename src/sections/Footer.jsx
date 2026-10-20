@@ -23,12 +23,23 @@ export default function Footer() {
   const associationName = settings?.association_name || "Les Colibris 226"
   const footerText =
     settings?.footer_text || "Depuis 2001, culture, transmission et carnaval."
-  const email = settings?.email || "lescolibris972mv@hotmail.fr"
-  const phone = settings?.phone || "+596 696 29 89 21"
-  const address = settings?.address || "Morne-Vert, Martinique"
-  const instagram =
-    settings?.instagram || "https://www.instagram.com/les_colibris_226/"
-  const whatsapp = settings?.whatsapp || "https://wa.me/596696298921"
+  const email = settings?.email?.trim() || ""
+  const phone = settings?.phone?.trim() || ""
+  const address = settings?.address?.trim() || ""
+  const instagram = settings?.instagram?.trim() || ""
+  const whatsapp = settings?.whatsapp?.trim() || ""
+
+  const safeUrl = (value) => {
+    if (!value) return null
+    try {
+      const parsed = new URL(/^https?:\/\//i.test(value) ? value : "https://" + value)
+      return ["https:", "http:"].includes(parsed.protocol) ? parsed.href : null
+    } catch { return null }
+  }
+  const instagramUrl = safeUrl(instagram)
+  const whatsappUrl = whatsapp && /^[+\d\s().-]+$/.test(whatsapp)
+    ? "https://wa.me/" + whatsapp.replace(/\D/g, "")
+    : safeUrl(whatsapp)
 
   return (
     <footer className="relative overflow-hidden bg-[#050505] px-6 py-20 text-white">
@@ -83,8 +94,8 @@ export default function Footer() {
             <Link to="/partners">Partenaires</Link>
             <Link to="/become-partner">Devenir partenaire</Link>
 
-            {instagram && (
-              <a href={instagram} target="_blank" rel="noreferrer">
+            {instagramUrl && (
+              <a href={instagramUrl} target="_blank" rel="noreferrer">
                 Instagram
               </a>
             )}
@@ -113,7 +124,7 @@ export default function Footer() {
 
             {phone && (
               <a
-                href={`tel:${phone.replace(/\s/g, "")}`}
+                href={`tel:${phone.replace(/[^\d+]/g, "")}`}
                 className="flex items-center gap-3"
               >
                 <Phone size={20} />
@@ -121,9 +132,9 @@ export default function Footer() {
               </a>
             )}
 
-            {whatsapp && (
+            {whatsappUrl && (
               <a
-                href={whatsapp}
+                href={whatsappUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center gap-3"
@@ -133,9 +144,9 @@ export default function Footer() {
               </a>
             )}
 
-            {instagram && (
+            {instagramUrl && (
               <a
-                href={instagram}
+                href={instagramUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center gap-3"
