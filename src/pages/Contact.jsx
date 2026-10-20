@@ -1,6 +1,5 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import { whatsappGeneral } from "../lib/links"
 import { supabase } from "../lib/supabase"
 import {
   Mail,
@@ -17,6 +16,25 @@ export default function Contact() {
     subject: "",
     message: "",
   })
+
+  const [contactInfo, setContactInfo] = useState(null)
+  useEffect(() => {
+    let active = true
+    supabase.from("site_settings").select("email, phone, address, whatsapp, instagram").eq("id", 1).single()
+      .then(({ data, error }) => { if (active && !error) setContactInfo(data) })
+    return () => { active = false }
+  }, [])
+
+  const socialUrl = (value) => {
+    if (!value) return null
+    try {
+      const url = new URL(/^https?:\/\//i.test(value) ? value : "https://" + value)
+      return ["https:", "http:"].includes(url.protocol) ? url.href : null
+    } catch { return null }
+  }
+  const whatsappUrl = contactInfo?.whatsapp && /^[+\d\s().-]+$/.test(contactInfo.whatsapp)
+    ? "https://wa.me/" + contactInfo.whatsapp.replace(/\D/g, "")
+    : socialUrl(contactInfo?.whatsapp)
 
   const [sending, setSending] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -103,46 +121,29 @@ export default function Contact() {
             <h2 className="text-3xl font-bold">Informations</h2>
 
             <div className="mt-10 flex flex-col gap-8 text-white/75">
-              <a
-                href="mailto:Lescolibris972mv@hotmail.fr"
-                className="flex items-center gap-4 transition hover:text-yellow-400"
-              >
-                <Mail size={24} />
-                Lescolibris972mv@hotmail.fr
-              </a>
-
-              <a
-                href={whatsappGeneral}
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center gap-4 transition hover:text-yellow-400"
-              >
-                <MessageCircle size={24} />
-                WhatsApp
-              </a>
-
-              <a
-                href="tel:+596696298921"
-                className="flex items-center gap-4 transition hover:text-yellow-400"
-              >
-                <Phone size={24} />
-                +596 696 29 89 21
-              </a>
-
-              <div className="flex items-center gap-4">
-                <MapPin size={24} />
-                Morne-Vert, Martinique
-              </div>
-
-              <a
-                href="https://www.instagram.com/les_colibris_226"
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center gap-4 transition hover:text-yellow-400"
-              >
-                <Camera size={24} />
-                Instagram
-              </a>
+              {contactInfo?.email && (
+                <a href={"mailto:" + contactInfo.email} className="flex items-center gap-4 break-all transition hover:text-yellow-400">
+                  <Mail size={24} className="shrink-0" />{contactInfo.email}
+                </a>
+              )}
+              {whatsappUrl && (
+                <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 transition hover:text-yellow-400">
+                  <MessageCircle size={24} className="shrink-0" />WhatsApp
+                </a>
+              )}
+              {contactInfo?.phone && (
+                <a href={"tel:" + contactInfo.phone.replace(/[^\d+]/g, "")} className="flex items-center gap-4 transition hover:text-yellow-400">
+                  <Phone size={24} className="shrink-0" />{contactInfo.phone}
+                </a>
+              )}
+              {contactInfo?.address && (
+                <div className="flex items-center gap-4"><MapPin size={24} className="shrink-0" />{contactInfo.address}</div>
+              )}
+              {socialUrl(contactInfo?.instagram) && (
+                <a href={socialUrl(contactInfo.instagram)} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 transition hover:text-yellow-400">
+                  <Camera size={24} className="shrink-0" />Instagram
+                </a>
+              )}
             </div>
           </motion.div>
 
