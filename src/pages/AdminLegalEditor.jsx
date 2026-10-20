@@ -68,8 +68,9 @@ export default function AdminLegalEditor() {
           </section>
           <aside className="rounded-2xl border border-yellow-500/30 bg-yellow-500/10 p-6">
             <h2 className="font-bold text-yellow-300">Informations automatiques</h2>
-            <p className="mt-2 text-sm text-white/70">Les valeurs entre accolades sont automatiquement remplacées par les paramètres de l'association. Ne saisissez pas de données fictives.</p>
-            <p className="mt-3 break-words font-mono text-xs leading-6 text-yellow-200">{"{association_name} · {email} · {phone} · {address}"}</p>
+            <p className="mt-2 text-sm text-white/70">Les valeurs entre accolades sont automatiquement remplacées par les paramètres de l'association. Complétez les informations officielles dans Admin → Paramètres. Ne saisissez pas de données fictives.</p>
+            <Link to="/admin/settings" className="mt-3 inline-block text-sm font-semibold text-yellow-400 underline">Compléter les informations dans les paramètres →</Link>
+            <p className="mt-3 break-words font-mono text-xs leading-6 text-yellow-200">{"{nom_site} · {association} · {adresse_association} · {rna} · {direction_publication} · {contact} · {hebergeur} · {adresse_hebergeur} · {site_hebergeur} · {duree_conservation} · {analytics_provider} · {cookie_policy}"}</p>
           </aside>
           {page.sections.map((section,index) => (
             <section key={index} className="rounded-3xl border border-white/10 bg-[#161616] p-6 md:p-8">
