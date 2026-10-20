@@ -37,6 +37,7 @@ import AdminMessages from "./pages/AdminMessages"
 import AdminPartnerRequests from "./pages/AdminPartnerRequests"
 import AdminSettings from "./pages/AdminSettings"
 import AdminLegalPages from "./pages/AdminLegalPages"
+import AdminLegalEditor from "./pages/AdminLegalEditor"
 import LegalContentPage from "./pages/LegalContentPage"
 
 import SeoManager from "./components/SeoManager"
@@ -59,7 +60,9 @@ function AnimatedRoutes() {
           <Route path="/" element={<Home />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/legal" element={<LegalContentPage slug="legal" />} />
+          <Route path="/mentions-legales" element={<LegalContentPage slug="legal" />} />
           <Route path="/privacy" element={<LegalContentPage slug="privacy" />} />
+          <Route path="/politique-confidentialite" element={<LegalContentPage slug="privacy" />} />
           <Route path="/gallery" element={<GalleryPage />} />
           <Route path="/events" element={<EventsPage />} />
           <Route path="/join" element={<JoinPage />} />
@@ -88,6 +91,8 @@ function AnimatedRoutes() {
             <Route path="partner-requests" element={<AdminPartnerRequests />} />
             <Route path="settings" element={<AdminSettings />} />
             <Route path="legal" element={<AdminLegalPages />} />
+            <Route path="pages-juridiques" element={<AdminLegalPages />} />
+            <Route path="pages-juridiques/:slug" element={<AdminLegalEditor />} />
             <Route path="analytics" element={<AdminAnalytics />} />
           </Route>
 
