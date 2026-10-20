@@ -29,6 +29,8 @@ const pages = {
     title: "Nos partenaires | Les Colibris 226",
     description: "Découvrez les partenaires qui accompagnent Les Colibris 226 et soutiennent la culture, la jeunesse et les traditions du Morne-Vert.",
   },
+  "/mentions-legales": { title: "Mentions légales | Les Colibris 226", description: "Informations légales du site Les Colibris 226." },
+  "/politique-confidentialite": { title: "Politique de confidentialité | Les Colibris 226", description: "Informations sur le traitement des données personnelles par Les Colibris 226." },
   "/legal": { title: "Mentions légales | Les Colibris 226", description: "Informations légales du site Les Colibris 226." },
   "/privacy": { title: "Politique de confidentialité | Les Colibris 226", description: "Informations sur le traitement des données personnelles par Les Colibris 226." },
   "/contact": {
