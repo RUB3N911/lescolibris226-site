@@ -94,6 +94,15 @@ export default function LegalContentPage({ slug }) {
           </div>
         </div>}
 
+        {page && slug === "privacy" && (
+          <section className="mt-10 flex flex-col justify-between gap-6 rounded-[2rem] border border-white/10 bg-[#171717] p-8 md:flex-row md:items-center md:p-10">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-yellow-400">À consulter aussi</p>
+              <h2 className="mt-3 text-2xl font-bold md:text-3xl">Nos mentions légales</h2>
+            </div>
+            <Link to="/mentions-legales" className="inline-flex shrink-0 items-center justify-center gap-3 rounded-full bg-yellow-500 px-7 py-4 text-sm font-bold text-black transition hover:bg-yellow-400">Consulter <span aria-hidden="true">↗</span></Link>
+          </section>
+        )}
         {page && slug === "legal" && (
           <section className="mt-10 flex flex-col justify-between gap-6 rounded-[2rem] border border-white/10 bg-[#171717] p-8 md:flex-row md:items-center md:p-10">
             <div>
