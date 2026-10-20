@@ -37,6 +37,7 @@ import AdminMessages from "./pages/AdminMessages"
 import AdminPartnerRequests from "./pages/AdminPartnerRequests"
 import AdminSettings from "./pages/AdminSettings"
 
+import SeoManager from "./components/SeoManager"
 import AnalyticsTracker from "./components/AnalyticsTracker"
 import AdminAnalytics from "./pages/AdminAnalytics"
 
@@ -120,6 +121,7 @@ function AppContent() {
 export default function App() {
   return (
     <BrowserRouter>
+      <SeoManager />
       <AnalyticsTracker />
       <AppContent />
     </BrowserRouter>
