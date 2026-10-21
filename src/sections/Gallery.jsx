@@ -70,6 +70,8 @@ export default function Gallery() {
               >
                 <img
                   src={photo.image_url}
+                  loading="lazy"
+                  decoding="async"
                   alt={photo.title || "Galerie Les Colibris 226"}
                   className="h-full min-h-[320px] w-full object-cover transition duration-700 group-hover:scale-110"
                 />
