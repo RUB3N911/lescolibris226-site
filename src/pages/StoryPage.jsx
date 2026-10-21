@@ -48,12 +48,11 @@ export default function StoryPage() {
           </p>
 
           <h1 className="text-5xl font-black md:text-7xl">
-            Une mémoire culturelle depuis 2001.
+            Les Colibris du Morne-Vert : une mémoire culturelle depuis 2001.
           </h1>
 
           <p className="mt-6 max-w-3xl text-lg leading-8 text-white/65">
-            Les Colibris 226 racontent une histoire de transmission, de
-            carnaval, de cohésion et de culture au Morne-Vert.
+            Les Colibris du Morne-Vert, aussi connus sous le nom de Colibris 226, racontent une histoire de transmission, de carnaval, de cohésion et de culture au Morne-Vert (97226), en Martinique.
           </p>
         </motion.div>
 
