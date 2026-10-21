@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { lazy, Suspense } from "react"
 import {
   BrowserRouter,
   Routes,
@@ -11,38 +11,37 @@ import { AnimatePresence, motion } from "framer-motion"
 import Navbar from "./components/Navbar"
 import Footer from "./sections/Footer"
 import ScrollToTop from "./components/ScrollToTop"
-import Loader from "./components/Loader"
 
 import Home from "./pages/Home"
-import Contact from "./pages/Contact"
-import GalleryPage from "./pages/GalleryPage"
-import EventsPage from "./pages/EventsPage"
-import JoinPage from "./pages/JoinPage"
-import StoryPage from "./pages/StoryPage"
-import PartnersPage from "./pages/PartnersPage"
-import BecomePartnerPage from "./pages/BecomePartnerPage"
-import OrganizationPage from "./pages/OrganizationPage"
-import NotFound from "./pages/NotFound"
+const Contact = lazy(() => import("./pages/Contact"))
+const GalleryPage = lazy(() => import("./pages/GalleryPage"))
+const EventsPage = lazy(() => import("./pages/EventsPage"))
+const JoinPage = lazy(() => import("./pages/JoinPage"))
+const StoryPage = lazy(() => import("./pages/StoryPage"))
+const PartnersPage = lazy(() => import("./pages/PartnersPage"))
+const BecomePartnerPage = lazy(() => import("./pages/BecomePartnerPage"))
+const OrganizationPage = lazy(() => import("./pages/OrganizationPage"))
+const NotFound = lazy(() => import("./pages/NotFound"))
 
-import AdminLogin from "./pages/AdminLogin"
-import AdminDashboard from "./pages/AdminDashboard"
-import ProtectedAdminRoute from "./components/ProtectedAdminRoute"
-import AdminGallery from "./pages/AdminGallery"
-import AdminEvents from "./pages/AdminEvents"
-import AdminPartners from "./pages/AdminPartners"
-import AdminStory from "./pages/AdminStory"
-import AdminOrganization from "./pages/AdminOrganization"
-import AdminLayout from "./layouts/AdminLayout"
-import AdminMessages from "./pages/AdminMessages"
-import AdminPartnerRequests from "./pages/AdminPartnerRequests"
-import AdminSettings from "./pages/AdminSettings"
-import AdminLegalPages from "./pages/AdminLegalPages"
-import AdminLegalEditor from "./pages/AdminLegalEditor"
-import LegalContentPage from "./pages/LegalContentPage"
+const AdminLogin = lazy(() => import("./pages/AdminLogin"))
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard"))
+const ProtectedAdminRoute = lazy(() => import("./components/ProtectedAdminRoute"))
+const AdminGallery = lazy(() => import("./pages/AdminGallery"))
+const AdminEvents = lazy(() => import("./pages/AdminEvents"))
+const AdminPartners = lazy(() => import("./pages/AdminPartners"))
+const AdminStory = lazy(() => import("./pages/AdminStory"))
+const AdminOrganization = lazy(() => import("./pages/AdminOrganization"))
+const AdminLayout = lazy(() => import("./layouts/AdminLayout"))
+const AdminMessages = lazy(() => import("./pages/AdminMessages"))
+const AdminPartnerRequests = lazy(() => import("./pages/AdminPartnerRequests"))
+const AdminSettings = lazy(() => import("./pages/AdminSettings"))
+const AdminLegalPages = lazy(() => import("./pages/AdminLegalPages"))
+const AdminLegalEditor = lazy(() => import("./pages/AdminLegalEditor"))
+const LegalContentPage = lazy(() => import("./pages/LegalContentPage"))
 
 import SeoManager from "./components/SeoManager"
 import AnalyticsTracker from "./components/AnalyticsTracker"
-import AdminAnalytics from "./pages/AdminAnalytics"
+const AdminAnalytics = lazy(() => import("./pages/AdminAnalytics"))
 
 function AnimatedRoutes() {
   const location = useLocation()
@@ -106,23 +105,12 @@ function AnimatedRoutes() {
 function AppContent() {
   const location = useLocation()
   const isAdminPage = location.pathname.startsWith("/admin")
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false)
-    }, 1800)
-
-    return () => clearTimeout(timer)
-  }, [])
-
   return (
     <main className="bg-black text-white">
-      <Loader loading={loading} />
 
       {!isAdminPage && <Navbar />}
       <ScrollToTop />
-      <AnimatedRoutes />
+      <Suspense fallback={<div className="min-h-screen bg-black" aria-label="Chargement de la page" />}><AnimatedRoutes /></Suspense>
       {!isAdminPage && <Footer />}
     </main>
   )
