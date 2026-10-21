@@ -51,6 +51,8 @@ export default function StorySection() {
           >
             <img
               src="/images/story/story-1.jpg"
+              loading="lazy"
+              decoding="async"
               alt="Les Colibris"
               className="rounded-3xl object-cover shadow-2xl"
             />
