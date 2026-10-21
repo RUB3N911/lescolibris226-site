@@ -67,7 +67,7 @@ export default function Hero() {
           className="max-w-5xl"
         >
           <p className="mb-5 text-sm uppercase tracking-[0.35em] text-yellow-500">
-            Association culturelle du Morne-Vert
+            Les Colibris du Morne-Vert · Association culturelle en Martinique
           </p>
 
           <h1 className="text-5xl font-black leading-none text-white sm:text-6xl md:text-8xl">
@@ -77,6 +77,8 @@ export default function Hero() {
           <p className="mt-6 max-w-3xl text-xl italic text-white/80 sm:text-2xl md:text-4xl">
             {heroSubtitle}
           </p>
+
+          <p className="mt-5 max-w-2xl text-base leading-7 text-white/70">Basés au Morne-Vert (97226), en Martinique, Les Colibris 226 font vivre le carnaval, les percussions et les traditions culturelles à travers les générations.</p>
 
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
             <Link
