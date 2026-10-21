@@ -34,7 +34,9 @@ export default function AdminLegalEditor() {
     setMessage("")
     const {error} = await supabase.from("legal_pages").update({
       title: page.title, eyebrow: page.eyebrow, intro: page.intro,
-      sections: page.sections, updated_at: new Date().toISOString()
+      sections: page.sections,
+      ...(item.db === "privacy" ? { summary_title: page.summary_title, summary_points: page.summary_points } : {}),
+      updated_at: new Date().toISOString()
     }).eq("slug", item.db)
     setSaving(false)
     setMessage(error ? "Erreur : " + error.message : "Modifications enregistrées et publiées.")
@@ -72,10 +74,24 @@ export default function AdminLegalEditor() {
             <Link to="/admin/settings" className="mt-3 inline-block text-sm font-semibold text-yellow-400 underline">Compléter les informations dans les paramètres →</Link>
             <p className="mt-3 break-words font-mono text-xs leading-6 text-yellow-200">{"{nom_site} · {association} · {adresse_association} · {rna} · {direction_publication} · {contact} · {hebergeur} · {adresse_hebergeur} · {site_hebergeur} · {duree_conservation} · {analytics_provider} · {cookie_policy}"}</p>
           </aside>
+          {item.db === "privacy" && <section className="rounded-3xl border border-white/10 bg-[#161616] p-6 md:p-8">
+            <div className="flex items-center gap-4 border-b border-white/10 pb-6">
+              <span className="rounded-xl bg-yellow-500/10 px-4 py-3 text-sm font-bold text-yellow-400">02</span>
+              <div><h2 className="text-xl font-bold">Résumé en mots simples</h2><p className="mt-1 text-sm text-white/50">Les quatre points mis en avant sous le sommaire de la politique de confidentialité.</p></div>
+            </div>
+            <label className="mt-7 block text-sm font-semibold">Titre du résumé
+              <input required value={page.summary_title || ""} onChange={e => setField("summary_title",e.target.value)} className={input}/>
+            </label>
+            {(Array.isArray(page.summary_points) ? page.summary_points : []).map((point,i) => (
+              <label key={i} className="mt-5 block text-sm font-semibold">Point {i+1}
+                <input required value={point} onChange={e => setPage(prev=>({...prev,summary_points:prev.summary_points.map((value,j)=>j===i?e.target.value:value)}))} className={input}/>
+              </label>
+            ))}
+          </section>}
           {page.sections.map((section,index) => (
             <section key={index} className="rounded-3xl border border-white/10 bg-[#161616] p-6 md:p-8">
               <div className="flex items-center gap-4 border-b border-white/10 pb-6">
-                <span className="rounded-xl bg-yellow-500/10 px-4 py-3 text-sm font-bold text-yellow-400">{String(index+2).padStart(2,"0")}</span>
+                <span className="rounded-xl bg-yellow-500/10 px-4 py-3 text-sm font-bold text-yellow-400">{String(index+(item.db === "privacy" ? 3 : 2)).padStart(2,"0")}</span>
                 <div><h2 className="text-xl font-bold">Section {index+1}</h2><p className="mt-1 text-sm text-white/50">Le titre alimente aussi le sommaire de la page.</p></div>
               </div>
               <label className="mt-7 block text-sm font-semibold">Titre de la section *
