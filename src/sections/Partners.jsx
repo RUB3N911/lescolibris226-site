@@ -67,6 +67,8 @@ export default function Partners() {
                 {partner.logo_url && (
                   <img
                     src={partner.logo_url}
+                    loading="lazy"
+                    decoding="async"
                     alt={partner.name}
                     className="max-h-24 object-contain transition duration-500 group-hover:scale-105"
                   />
