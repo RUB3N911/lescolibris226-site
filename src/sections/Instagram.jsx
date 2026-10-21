@@ -55,6 +55,8 @@ export default function InstagramSection() {
         >
           <img
             src="/images/instagram/mobile-instagram.webp"
+            loading="lazy"
+            decoding="async"
             alt="Instagram Les Colibris 226"
             className="w-full object-cover"
           />
@@ -78,6 +80,8 @@ export default function InstagramSection() {
             >
               <img
                 src={post}
+                loading="lazy"
+                decoding="async"
                 alt="Instagram Les Colibris 226"
                 className="h-[340px] w-full object-cover transition duration-700 group-hover:scale-110"
               />
