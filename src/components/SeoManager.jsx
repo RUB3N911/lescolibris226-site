@@ -10,8 +10,8 @@ const pages = {
     description: DEFAULT_DESCRIPTION,
   },
   "/story": {
-    title: "Notre histoire | Les Colibris du Morne-Vert",
-    description: "Découvrez l'histoire des Colibris 226, association culturelle du Morne-Vert, son engagement pour le carnaval martiniquais et la transmission entre générations.",
+    title: "Les Colibris du Morne-Vert | Histoire et carnaval en Martinique",
+    description: "Découvrez l’histoire des Colibris du Morne-Vert (Colibris 226), association culturelle martiniquaise : carnaval, percussions, traditions et transmission entre générations.",
   },
   "/organization": {
     title: "Notre association | Les Colibris 226",
