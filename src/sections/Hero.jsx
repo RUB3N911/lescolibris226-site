@@ -6,9 +6,12 @@ import { supabase } from "../lib/supabase"
 
 export default function Hero() {
   const [settings, setSettings] = useState(null)
+  const [playVideo, setPlayVideo] = useState(false)
 
   useEffect(() => {
     fetchSettings()
+    const timer = window.setTimeout(() => setPlayVideo(true), 3000)
+    return () => window.clearTimeout(timer)
   }, [])
 
   const fetchSettings = async () => {
@@ -34,9 +37,11 @@ export default function Hero() {
       id="accueil"
       className="relative min-h-screen overflow-hidden bg-black"
     >
-      {heroType === "video" ? (
+      <img src={heroImage} alt="" aria-hidden="true" fetchPriority="high" decoding="async" className="absolute inset-0 h-full w-full scale-105 object-cover opacity-70" />
+      {heroType === "video" && playVideo && (
         <video
           autoPlay
+          preload="none"
           muted
           loop
           playsInline
@@ -45,12 +50,6 @@ export default function Hero() {
         >
           <source src={heroVideo} type="video/mp4" />
         </video>
-      ) : (
-        <img
-          src={heroImage}
-          alt={heroTitle}
-          className="absolute inset-0 h-full w-full scale-105 object-cover opacity-70"
-        />
       )}
 
       <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-black/20" />
