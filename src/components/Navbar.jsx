@@ -83,6 +83,9 @@ export default function Navbar() {
 
           <button
             onClick={() => setOpen(!open)}
+            aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
+            aria-expanded={open}
+            aria-controls="navigation-mobile"
             className="relative z-50 text-white lg:hidden"
           >
             {open ? <X size={34} /> : <Menu size={34} />}
@@ -97,6 +100,7 @@ export default function Navbar() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
             transition={{ duration: 0.4 }}
+            id="navigation-mobile"
             className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-8 overflow-hidden bg-black"
           >
             <img
