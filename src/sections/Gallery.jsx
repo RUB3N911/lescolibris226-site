@@ -25,7 +25,7 @@ export default function Gallery() {
     }
   }
 
-  const lightboxImages = photos.map((photo) => photo.image_url)
+  const lightboxImages = photos.filter((photo) => photo.media_type !== "video").map((photo) => photo.image_url)
 
   return (
     <section
@@ -63,18 +63,18 @@ export default function Gallery() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.08, duration: 0.7 }}
-                onClick={() => setSelectedIndex(index)}
+                onClick={() => { if (photo.media_type !== "video") setSelectedIndex(photos.slice(0,index).filter(p => p.media_type !== "video").length) }}
                 className={`group relative cursor-pointer overflow-hidden rounded-3xl border border-white/10 bg-white/5 ${
                   index === 0 || index === 3 ? "md:row-span-2" : ""
                 }`}
               >
-                <img
+                {photo.media_type === "video" ? <video src={photo.image_url} controls playsInline preload="metadata" className="h-full min-h-[320px] w-full bg-black object-contain" aria-label={photo.title || "Vidéo des Colibris"} /> : <img
                   src={photo.image_url}
                   loading="lazy"
                   decoding="async"
                   alt={photo.title || "Galerie Les Colibris 226"}
                   className="h-full min-h-[320px] w-full object-cover transition duration-700 group-hover:scale-110"
-                />
+                />}
 
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-70" />
 
