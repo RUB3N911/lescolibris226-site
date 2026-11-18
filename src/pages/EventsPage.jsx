@@ -3,7 +3,7 @@ import { CalendarDays, MapPin, CalendarPlus, Download } from "lucide-react"
 import { useEffect, useState } from "react"
 import { supabase } from "../lib/supabase"
 
-const calendarDate = (value) => new Date(value).toISOString().replace(/[-:]/g, "").replace(/\\.\\d{3}/, "")
+const calendarDate = (value) => new Date(value).toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, "")
 
 const calendarDetails = (event) => {
   if (!event.start_date || !event.end_date) return null
