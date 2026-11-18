@@ -64,8 +64,8 @@ export default function GalleryPage() {
   }
 
   const openGallery = (sectionImages, index) => {
-    setCurrentImages(sectionImages.map((image) => image.image_url))
-    setSelectedIndex(index)
+    setCurrentImages(sectionImages.filter((image) => image.media_type !== "video").map((image) => image.image_url))
+    setSelectedIndex(sectionImages.slice(0, index).filter((image) => image.media_type !== "video").length)
   }
 
   return (
@@ -124,7 +124,7 @@ export default function GalleryPage() {
 
                 {sectionImages.length === 0 ? (
                   <p className="text-white/40">
-                    Aucune image publiée pour cette catégorie pour le moment.
+                    Aucun média publié pour cette catégorie pour le moment.
                   </p>
                 ) : (
                   <div className="grid gap-5 md:grid-cols-3">
@@ -138,14 +138,16 @@ export default function GalleryPage() {
                           delay: index * 0.08,
                           duration: 0.7,
                         }}
-                        onClick={() => openGallery(sectionImages, index)}
-                        className="group cursor-pointer overflow-hidden rounded-[2rem]"
+                        onClick={() => { if (image.media_type !== "video") openGallery(sectionImages, index) }}
+                        className="group overflow-hidden rounded-[2rem]"
                       >
-                        <img
+                        {image.media_type === "video" ? <video src={image.image_url} controls playsInline preload="metadata" className="h-[420px] w-full bg-black object-contain" aria-label={image.title || "Vidéo des Colibris"} /> : <img
+                          loading="lazy"
+                          decoding="async"
                           src={image.image_url}
                           alt={image.title || section.title}
-                          className="h-[420px] w-full object-cover transition duration-700 group-hover:scale-110"
-                        />
+                          className="h-[420px] w-full cursor-pointer object-cover transition duration-700 group-hover:scale-110"
+                        />}
 
                         {image.title && (
                           <p className="mt-4 text-lg font-bold">
