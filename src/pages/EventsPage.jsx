@@ -26,7 +26,7 @@ const calendarDetails = (event) => {
     `DTSTAMP:${calendarDate(new Date())}`, `DTSTART:${calendarDate(start)}`, `DTEND:${calendarDate(end)}`,
     `SUMMARY:${escapeIcs(event.title)}`, `DESCRIPTION:${escapeIcs(description)}`,
     `LOCATION:${escapeIcs(location)}`, "END:VEVENT", "END:VCALENDAR"
-  ].join("\\r\\n")
+  ].join("\r\n")
   return { google: google.toString(), ics: "data:text/calendar;charset=utf-8," + encodeURIComponent(ics) }
 }
 
