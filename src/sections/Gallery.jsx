@@ -76,9 +76,9 @@ export default function Gallery() {
                   className="h-full min-h-[320px] w-full object-cover transition duration-700 group-hover:scale-110"
                 />}
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-70" />
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-70" />
 
-                <div className="absolute bottom-5 left-5 right-5">
+                <div className="pointer-events-none absolute bottom-5 left-5 right-5">
                   <p className="text-sm uppercase tracking-[0.25em] text-yellow-400">
                     {photo.title || "Les Colibris 226"}
                   </p>
