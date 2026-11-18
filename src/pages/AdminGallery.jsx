@@ -11,6 +11,7 @@ export default function AdminGallery() {
     title: "",
     category: "carnaval",
     image_url: "",
+    media_type: "image",
     status: "published",
     show_on_home: false,
   }
@@ -43,12 +44,15 @@ export default function AdminGallery() {
     const file = e.target.files[0]
     if (!file) return
 
+    const isVideo = form.media_type === "video"
+    if (!(isVideo ? file.type.startsWith("video/") : file.type.startsWith("image/"))) { setMessage("Le type de fichier ne correspond pas au média sélectionné."); return }
+    if (isVideo && file.size > 40 * 1024 * 1024) { setMessage("La vidéo doit peser moins de 40 Mo. Pour une vidéo plus longue, privilégie un fichier MP4 compressé."); return }
     setPreview(URL.createObjectURL(file))
     setUploading(true)
     setMessage("")
 
     const fileExt = file.name.split(".").pop()
-    const fileName = `${Date.now()}.${fileExt}`
+    const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`
     const filePath = `gallery/${fileName}`
 
     const { error } = await supabase.storage
@@ -56,7 +60,7 @@ export default function AdminGallery() {
       .upload(filePath, file)
 
     if (error) {
-      setMessage("Erreur lors de l’upload de l’image.")
+      setMessage(`Erreur lors de l’envoi du fichier : ${error.message}`)
       setUploading(false)
       return
     }
@@ -78,11 +82,11 @@ export default function AdminGallery() {
     const { error } = await supabase.from("gallery_images").insert([form])
 
     if (error) {
-      setMessage("Erreur lors de l’ajout de l’image.")
+      setMessage("Erreur lors de l’ajout du média.")
       return
     }
 
-    setMessage("Image ajoutée avec succès.")
+    setMessage("Média ajouté avec succès.")
     setPreview(null)
     setForm(emptyForm)
     fetchImages()
@@ -107,7 +111,7 @@ export default function AdminGallery() {
   }
 
   const deleteImage = async (id) => {
-    const confirmDelete = window.confirm("Supprimer cette image ?")
+    const confirmDelete = window.confirm("Supprimer ce média ?")
     if (!confirmDelete) return
 
     const { error } = await supabase
@@ -120,7 +124,7 @@ export default function AdminGallery() {
       return
     }
 
-    setMessage("Image supprimée.")
+    setMessage("Média supprimé.")
     fetchImages()
   }
 
@@ -137,11 +141,12 @@ export default function AdminGallery() {
           onSubmit={handleSubmit}
           className="mt-12 grid gap-5 rounded-[2rem] border border-white/10 bg-white/[0.03] p-8"
         >
+          <div className="flex flex-wrap gap-3"><button type="button" onClick={() => { setForm({...emptyForm, media_type:"image"}); setPreview(null) }} className={`rounded-full px-6 py-3 font-bold ${form.media_type === "image" ? "bg-yellow-500 text-black" : "border border-white/20 text-white"}`}>Photo</button><button type="button" onClick={() => { setForm({...emptyForm, media_type:"video"}); setPreview(null) }} className={`rounded-full px-6 py-3 font-bold ${form.media_type === "video" ? "bg-yellow-500 text-black" : "border border-white/20 text-white"}`}>Vidéo</button></div>
           <input
             name="title"
             value={form.title}
             onChange={handleChange}
-            placeholder="Titre de l’image"
+            placeholder="Titre du média"
             className="rounded-2xl border border-white/10 bg-black/40 px-5 py-4 outline-none focus:border-yellow-500"
           />
 
@@ -165,12 +170,12 @@ export default function AdminGallery() {
 
           <label className="rounded-2xl border border-dashed border-white/20 bg-black/40 p-6">
             <span className="block text-sm uppercase tracking-[0.25em] text-yellow-500">
-              Image
+              {form.media_type === "video" ? "Vidéo (MP4/WebM, 40 Mo maximum)" : "Image"}
             </span>
 
             <input
               type="file"
-              accept="image/*"
+              accept={form.media_type === "video" ? "video/mp4,video/webm" : "image/*"}
               onChange={handleImageChange}
               className="mt-4 block w-full text-sm text-white/70"
             />
@@ -181,7 +186,8 @@ export default function AdminGallery() {
               </p>
             )}
 
-            {preview && (
+            {preview && form.media_type === "video" && <video src={preview} controls preload="metadata" className="mt-6 h-72 w-full rounded-2xl bg-black object-contain" />}
+            {preview && form.media_type === "image" && (
               <img
                 src={preview}
                 alt="Prévisualisation"
@@ -219,14 +225,14 @@ export default function AdminGallery() {
             disabled={uploading || !form.image_url}
             className="rounded-full bg-yellow-500 px-8 py-4 font-bold text-black disabled:opacity-50"
           >
-            Ajouter l’image
+            Ajouter {form.media_type === "video" ? "la vidéo" : "l’image"}
           </button>
 
           {message && <p className="text-white/70">{message}</p>}
         </form>
 
         <section className="mt-16">
-          <h2 className="text-3xl font-black">Images existantes</h2>
+          <h2 className="text-3xl font-black">Photos et vidéos existantes</h2>
 
           <div className="mt-8 grid gap-5 md:grid-cols-3">
             {images.map((image) => (
@@ -234,15 +240,16 @@ export default function AdminGallery() {
                 key={image.id}
                 className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03]"
               >
-                <img
+                {image.media_type === "video" ? <video src={image.image_url} controls preload="metadata" className="h-64 w-full bg-black object-contain" /> : <img
                   src={image.image_url}
                   alt={image.title || "Image galerie"}
+                  loading="lazy"
                   className="h-64 w-full object-cover"
-                />
+                />}
 
                 <div className="p-6">
                   <p className="text-sm uppercase tracking-[0.25em] text-yellow-400">
-                    {image.category}
+                    {image.media_type === "video" ? "Vidéo · " : "Photo · "}{image.category}
                   </p>
 
                   <h3 className="mt-2 text-xl font-black">
