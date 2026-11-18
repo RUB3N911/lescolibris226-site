@@ -1,8 +1,34 @@
 import { motion } from "framer-motion"
-import { CalendarDays, MapPin, ArrowRight } from "lucide-react"
-import { Link } from "react-router-dom"
+import { CalendarDays, MapPin, CalendarPlus, Download } from "lucide-react"
 import { useEffect, useState } from "react"
 import { supabase } from "../lib/supabase"
+
+const calendarDate = (value) => new Date(value).toISOString().replace(/[-:]/g, "").replace(/\\.\\d{3}/, "")
+
+const calendarDetails = (event) => {
+  if (!event.start_date || !event.end_date) return null
+  const start = new Date(event.start_date)
+  const end = new Date(event.end_date)
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime()) || end <= start) return null
+  const dates = `${calendarDate(start)}/${calendarDate(end)}`
+  const description = event.description || ""
+  const location = event.location || ""
+  const google = new URL("https://calendar.google.com/calendar/render")
+  google.searchParams.set("action", "TEMPLATE")
+  google.searchParams.set("text", event.title)
+  google.searchParams.set("dates", dates)
+  google.searchParams.set("details", description)
+  google.searchParams.set("location", location)
+  const escapeIcs = (text) => String(text || "").replace(/\\/g, "\\\\").replace(/\n/g, "\\n").replace(/,/g, "\\,").replace(/;/g, "\\;")
+  const ics = [
+    "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Les Colibris 226//Agenda//FR",
+    "BEGIN:VEVENT", `UID:${event.id}@lescolibris226.com`,
+    `DTSTAMP:${calendarDate(new Date())}`, `DTSTART:${calendarDate(start)}`, `DTEND:${calendarDate(end)}`,
+    `SUMMARY:${escapeIcs(event.title)}`, `DESCRIPTION:${escapeIcs(description)}`,
+    `LOCATION:${escapeIcs(location)}`, "END:VEVENT", "END:VCALENDAR"
+  ].join("\\r\\n")
+  return { google: google.toString(), ics: "data:text/calendar;charset=utf-8," + encodeURIComponent(ics) }
+}
 
 const getEventStatus = (event) => {
   if (!event.start_date || !event.end_date) return "upcoming"
@@ -131,6 +157,7 @@ function EventSection({ title, subtitle, emptyText, events, columns }) {
 
 function EventCard({ event, index }) {
   const status = getEventStatus(event)
+  const calendar = calendarDetails(event)
 
   return (
     <motion.article
@@ -176,14 +203,15 @@ function EventCard({ event, index }) {
           {event.description}
         </p>
 
-        {status !== "past" && (
-          <Link
-            to="/contact"
-            className="mt-8 inline-flex items-center gap-2 text-sm font-bold text-yellow-400"
-          >
-            Participer
-            <ArrowRight size={18} />
-          </Link>
+        {status !== "past" && calendar && (
+          <div className="mt-8 flex flex-wrap items-center gap-4">
+            <a href={calendar.google} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 rounded-full bg-yellow-500 px-5 py-3 text-sm font-bold text-black transition hover:bg-yellow-400">
+              <CalendarPlus size={18} /> Je bloque la date !
+            </a>
+            <a href={calendar.ics} download={`colibris-${event.id}.ics`} className="inline-flex items-center gap-2 text-sm font-semibold text-white/75 hover:text-white" aria-label="Télécharger cet événement pour Apple, Outlook ou un autre agenda">
+              <Download size={17} /> Autre agenda
+            </a>
+          </div>
         )}
       </div>
     </motion.article>
